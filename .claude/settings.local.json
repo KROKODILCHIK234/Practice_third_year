@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import geopandas; print\\('geopandas ok'\\)\")",
+      "Bash(python3 -c \"import fastapi; print\\('fastapi ok'\\)\")",
+      "Bash(python3 -c \"import uvicorn; print\\('uvicorn ok'\\)\")",
+      "Bash(python3 -c \"import pandas; print\\('pandas ok'\\)\")",
+      "Bash(pip install *)",
+      "Bash(python3 *)",
+      "Bash(mkdir -p /Users/kostya/PycharmProjects/Dashboard/backend)",
+      "Bash(mkdir -p /Users/kostya/PycharmProjects/Dashboard/frontend)",
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --no-turbopack)",
+      "Bash(npm install *)",
+      "Bash(npx playwright *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8000/api/filters)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/)",
+      "Bash(npm run *)",
+      "Bash(unzip -l fire_rasters-20260615T105455Z-3-001.zip)"
+    ]
+  }
+}

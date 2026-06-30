@@ -1,0 +1,30 @@
+# ── Dependencies ───────────────────────────────
+node_modules/
+/frontend/node_modules/
+
+# ── Python virtualenv / caches ─────────────────
+/.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# ── Next.js / build artifacts ──────────────────
+/frontend/.next/
+/frontend/out/
+/frontend/build/
+*.tsbuildinfo
+
+# ── IDE / OS ───────────────────────────────────
+.idea/
+.vscode/
+.DS_Store
+
+# ── Secrets ────────────────────────────────────
+.env
+.env.*
+
+# ── Large raw datasets (too big for GitHub) ────
+# Rasters and the source archive are excluded; see README → "Масштабирование"
+# for how to obtain and place them (data link in the app header).
+Data/fire_rasters/
+Data/**/*.zip
