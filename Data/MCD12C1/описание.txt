@@ -1,0 +1,38 @@
+lc_percent_names_ru = {
+    'Pct_Undefined':                'Неопределённый тип',
+    'Pct_Evergreen_Needleleaf_Forest': 'Вечнозелёный хвойный лес',
+    'Pct_Evergreen_Broadleaf_Forest':  'Вечнозелёный лиственный лес',
+    'Pct_Deciduous_Needleleaf_Forest': 'Листопадный хвойный лес',
+    'Pct_Deciduous_Broadleaf_Forest':  'Листопадный лиственный лес',
+    'Pct_Mixed_Forest':             'Смешанный лес',
+    'Pct_Closed_Shrublands':        'Закрытые кустарники',
+    'Pct_Open_Shrublands':          'Открытые кустарники',
+    'Pct_Woody_Savanna':            'Редколесье',
+    'Pct_Savanna':                  'Открытое редколесье',
+    'Pct_Grasslands':               'Луга',
+    'Pct_Permanent_Wetlands':       'Водно-болотные угодья',
+    'Pct_Croplands':                'Пашня',
+    'Pct_Urban':                    'Урбанизированные территории',
+    'Pct_Cropland_Natural_Mosaic':  'Пашня / естественная растительность',
+    'Pct_Snow_Ice':                 'Снег и лёд',
+    'Pct_Barren':                   'Голая почва',
+}
+lc_percent_names = {
+    'LC_Type1_Pct_Class_0':  'Pct_Undefined',
+    'LC_Type1_Pct_Class_1':  'Pct_Evergreen_Needleleaf_Forest',
+    'LC_Type1_Pct_Class_2':  'Pct_Evergreen_Broadleaf_Forest',
+    'LC_Type1_Pct_Class_3':  'Pct_Deciduous_Needleleaf_Forest',
+    'LC_Type1_Pct_Class_4':  'Pct_Deciduous_Broadleaf_Forest',
+    'LC_Type1_Pct_Class_5':  'Pct_Mixed_Forest',
+    'LC_Type1_Pct_Class_6':  'Pct_Closed_Shrublands',
+    'LC_Type1_Pct_Class_7':  'Pct_Open_Shrublands',
+    'LC_Type1_Pct_Class_8':  'Pct_Woody_Savanna',        # редколесье
+    'LC_Type1_Pct_Class_9':  'Pct_Savanna',              # открытое редколесье
+    'LC_Type1_Pct_Class_10': 'Pct_Grasslands',
+    'LC_Type1_Pct_Class_11': 'Pct_Permanent_Wetlands',
+    'LC_Type1_Pct_Class_12': 'Pct_Croplands',
+    'LC_Type1_Pct_Class_13': 'Pct_Urban',
+    'LC_Type1_Pct_Class_14': 'Pct_Cropland_Natural_Mosaic',
+    'LC_Type1_Pct_Class_15': 'Pct_Snow_Ice',
+    'LC_Type1_Pct_Class_16': 'Pct_Barren',
+}

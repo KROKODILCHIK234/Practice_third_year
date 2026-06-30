@@ -1,0 +1,269 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+/* ---------------------------------------------------------------------
+   Design tokens — semantic colour/elevation system.
+   Components must reference these via Tailwind utilities (bg-surface, etc.)
+   or via CSS variables. Hardcoded hex colours in components are forbidden.
+   --------------------------------------------------------------------- */
+
+:root {
+  /* Surfaces — layered from deepest to highest */
+  --bg:               #0b0e15;   /* page background */
+  --bg-grad-start:    #0d1118;
+  --bg-grad-end:      #0a0c12;
+  --surface:          #11151f;   /* panels, cards */
+  --surface-2:        #161b27;   /* nested surfaces (chart bg, etc.) */
+  --surface-hover:    #1c2230;
+  --border:           rgba(255, 255, 255, 0.07);
+  --border-strong:    rgba(255, 255, 255, 0.13);
+
+  /* Text */
+  --text:             #e7eaf0;
+  --text-muted:       #a0a8b8;
+  --text-dim:         #6b7384;
+
+  /* Brand & semantic accents */
+  --accent:           #34d399;   /* emerald-400 — primary action / selected */
+  --accent-2:         #10b981;   /* emerald-500 — pressed */
+  --accent-soft:      rgba(52, 211, 153, 0.12);
+  --warning:          #f97316;   /* orange-500 — fire, period labels */
+  --warning-soft:     rgba(249, 115, 22, 0.12);
+  --danger:           #ef4444;   /* red-500 — error / negative deviation */
+  --danger-soft:      rgba(239, 68, 68, 0.12);
+  --info:             #38bdf8;   /* sky-400 */
+  --info-soft:        rgba(56, 189, 248, 0.10);
+
+  /* Per-index accent colours (mirrors FilterPanel VI_META) */
+  --vi-ndvi:  #22c55e;
+  --vi-evi:   #16a34a;
+  --vi-nbr:   #f97316;
+  --vi-nbr2:  #fb923c;
+  --vi-bai:   #ef4444;
+  --vi-ndwi:  #38bdf8;
+  --vi-savi:  #a3e635;
+
+  /* Shadows — soft, layered */
+  --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.45);
+  --shadow-lg:  0 12px 36px rgba(0, 0, 0, 0.55);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius:    10px;
+  --radius-lg: 14px;
+
+  /* Focus ring */
+  --ring: 0 0 0 2px rgba(52, 211, 153, 0.45);
+}
+
+/* ---------------------------------------------------------------------
+   Theme binding for Tailwind v4 (so utilities like `bg-surface`,
+   `text-muted`, `border-border` resolve to the tokens above).
+   --------------------------------------------------------------------- */
+@theme inline {
+  --color-bg:          var(--bg);
+  --color-surface:     var(--surface);
+  --color-surface-2:   var(--surface-2);
+  --color-border:      var(--border);
+  --color-text:        var(--text);
+  --color-text-muted:  var(--text-muted);
+  --color-text-dim:    var(--text-dim);
+  --color-accent:      var(--accent);
+  --color-accent-2:    var(--accent-2);
+  --color-warning:     var(--warning);
+  --color-danger:      var(--danger);
+  --color-info:        var(--info);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --radius-sm: 6px;
+  --radius:    10px;
+  --radius-lg: 14px;
+
+  --shadow-sm:  var(--shadow-sm);
+  --shadow-md:  var(--shadow-md);
+  --shadow-lg:  var(--shadow-lg);
+}
+
+/* ---------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------- */
+html, body {
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at top left, rgba(52, 211, 153, 0.06), transparent 60%),
+    radial-gradient(ellipse at bottom right, rgba(249, 115, 22, 0.04), transparent 55%),
+    linear-gradient(180deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%);
+  color: var(--text);
+  font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-feature-settings: "ss01", "cv11", "tnum";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Better scrollbars (Webkit) */
+.scrollbar-thin::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* Selection */
+::selection {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+/* Focus ring helper — apply to any focusable element by adding `.focus-ring` */
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+}
+
+/* Recharts — fix the dimension warnings we saw in dev logs */
+.recharts-wrapper,
+.recharts-surface {
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Utility: subtle inner highlight for cards on top of dark bg */
+.glass {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0) 50%),
+    var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.glass-hover {
+  transition: border-color 0.15s, background-color 0.15s, transform 0.15s;
+}
+.glass-hover:hover {
+  border-color: var(--border-strong);
+  background-color: var(--surface-hover);
+}
+
+/* Metric group card — used in the stats strip */
+.metric-group {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0) 55%),
+    var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+.metric-group:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+/* Accent rail on the left edge, colour set per-group via --rail */
+.metric-group::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--rail, var(--accent));
+  opacity: 0.9;
+}
+
+/* Raster thumbnail tile — accent colour set per-band via --ca */
+.raster-tile {
+  transition: border-color 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+}
+.raster-tile:hover {
+  border-color: color-mix(in srgb, var(--ca, var(--accent)) 60%, transparent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.raster-tile img {
+  transition: transform 0.25s ease;
+}
+.raster-tile:hover img {
+  transform: scale(1.04);
+}
+
+/* Subtle entrance for the whole canvas */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.rise-in { animation: rise-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Pulse glow for "live" indicators */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.45); }
+  50%      { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+}
+.pulse-glow {
+  animation: pulse-glow 2.4s ease-in-out infinite;
+}
+
+/* Leaflet tooltips — dark theme fit */
+.leaflet-tooltip {
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+  border: 1px solid var(--border-strong) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--shadow-lg) !important;
+  padding: 8px 10px !important;
+  font-family: var(--font-sans), system-ui, sans-serif !important;
+  font-size: 12px !important;
+  backdrop-filter: blur(8px);
+}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+  border-top-color: var(--border-strong) !important;
+}
+.leaflet-tooltip.fire-tooltip {
+  padding: 10px 12px !important;
+}
+.leaflet-tooltip.leaflet-tooltip-forest {
+  background: rgba(17, 21, 31, 0.85) !important;
+  font-size: 11px !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+  font-weight: 500;
+}
+
+/* Leaflet controls (zoom) — recolour */
+.leaflet-control-zoom a {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+.leaflet-control-zoom a:hover {
+  background: var(--surface-hover) !important;
+}
+.leaflet-control-attribution {
+  background: rgba(11, 14, 21, 0.7) !important;
+  color: var(--text-dim) !important;
+  backdrop-filter: blur(4px);
+}
+.leaflet-control-attribution a {
+  color: var(--text-muted) !important;
+}
