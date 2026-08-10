@@ -7,13 +7,13 @@ import VegAreaChart from "@/components/VegAreaChart";
 import SensitivityChart from "@/components/SensitivityChart";
 import StatsPanel from "@/components/StatsPanel";
 import RasterGallery from "@/components/RasterGallery";
+import SelectedFiresBar from "@/components/SelectedFiresBar";
+import NdviAreasChart from "@/components/NdviAreasChart";
 import Header from "@/components/Header";
 import { api } from "@/lib/api";
 import type { AggPoint, FiltersConfig, FireMeta } from "@/types";
 
 const FireMap = dynamic(() => import("@/components/FireMap"), { ssr: false });
-
-type BottomTab = "veg" | "raster";
 
 export default function Dashboard() {
   const [config, setConfig] = useState<FiltersConfig | null>(null);
@@ -22,7 +22,6 @@ export default function Dashboard() {
   const [lesnGeoJSON, setLesnGeoJSON] = useState<GeoJSON.FeatureCollection | null>(null);
 
   const [selectedFireIds, setSelectedFireIds] = useState<Set<string>>(new Set());
-  const [bottomTab, setBottomTab] = useState<BottomTab>("veg");
   const [apiOk, setApiOk] = useState(true);
   const [frname, setFrname] = useState<string | null>(null);
   const [areaMin, setAreaMin] = useState(0);
@@ -134,12 +133,6 @@ export default function Dashboard() {
     ? Number(singleFire.dt_first.slice(0, 4)) || 2005
     : 2005;
 
-  // The raster tab only makes sense for exactly one fire. If the user selects a
-  // second fire while on it, fall back to the vegetation tab automatically.
-  useEffect(() => {
-    if (bottomTab === "raster" && !singleFireId) setBottomTab("veg");
-  }, [bottomTab, singleFireId]);
-
   // Scope labels tell the user which data each panel reflects right now. The VI
   // charts aggregate over the selected set; the veg chart only narrows to a
   // single fire (otherwise it shows the global aggregate), so it has its own.
@@ -173,7 +166,7 @@ export default function Dashboard() {
 
       {/* min-h forces a usable layout height; on tall screens flex-1 fills the
           viewport, on short screens the page scrolls so the bottom stays reachable. */}
-      <div className="flex flex-1 min-h-[1140px]">
+      <div className="flex flex-1 min-h-[1240px]">
       {/* Sidebar */}
       <FilterPanel
         config={config}
@@ -206,8 +199,18 @@ export default function Dashboard() {
           <StatsPanel fires={fires} selectedFireIds={selectedFireIds} viData={viData} index={index} />
         </div>
 
+        {/* Selected fires (with dates) — moved up here from the filter sidebar */}
+        <div className="shrink-0">
+          <SelectedFiresBar
+            fires={fires}
+            selectedFireIds={selectedFireIds}
+            onToggle={handleFireToggle}
+            onClear={() => setSelectedFireIds(new Set())}
+          />
+        </div>
+
         {/* Centre: map + right charts */}
-        <div className="flex-1 flex gap-3 min-h-[480px]">
+        <div className="flex-1 flex gap-3 min-h-[580px]">
 
           {/* Map card */}
           <div className="flex-1 relative min-w-0 rounded-2xl overflow-hidden border border-border shadow-md">
@@ -229,7 +232,7 @@ export default function Dashboard() {
           </div>
 
           {/* Right charts column — two stacked chart cards */}
-          <div className="w-[470px] shrink-0 flex flex-col gap-3 min-h-0">
+          <div className="w-[440px] shrink-0 flex flex-col gap-3 min-h-0">
             <div className="flex-1 min-h-0 px-5 py-4 rounded-2xl border border-border bg-surface/40 shadow-sm flex flex-col">
               <VIChart data={viData} index={index} period={period} loading={viLoading} scope={viScope.label} scopeActive={viScope.active} />
             </div>
@@ -239,45 +242,33 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Bottom: tabbed area card */}
-        <div className="h-[520px] shrink-0 rounded-2xl border border-border bg-surface/40 shadow-sm flex flex-col relative z-10">
-          {/* Tab header */}
-          <div className="shrink-0 flex items-center gap-1 px-4 pt-2.5 pb-1 border-b border-border">
-            <button
-              onClick={() => setBottomTab("veg")}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors focus-ring ${
-                bottomTab === "veg"
-                  ? "bg-surface-hover text-text"
-                  : "text-text-muted hover:text-text hover:bg-surface-hover"
-              }`}
-            >
-              Растительный покров
-            </button>
-            <button
-              onClick={() => setBottomTab("raster")}
-              disabled={!singleFireId}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 focus-ring disabled:opacity-40 disabled:cursor-not-allowed ${
-                bottomTab === "raster"
-                  ? "bg-surface-hover text-text"
-                  : "text-text-muted hover:text-text hover:bg-surface-hover"
-              }`}
-              title={!singleFireId ? "Выберите один пожар, чтобы открыть снимки" : undefined}
-            >
-              Снимки гари в VI
-              {!singleFireId && <span className="text-[9px] text-text-dim">· выберите 1 пожар</span>}
-            </button>
-            {bottomTab === "raster" && singleFireId && (
-              <span className="ml-auto text-[10px] text-text-muted tabular-nums">
+        {/* Snapshots of the selected fire — shown right under the map when a
+            single fire is chosen (no tabs; the vegetation block moves below). */}
+        {singleFireId && (
+          <div className="shrink-0 h-[470px] rounded-2xl border border-border bg-surface/40 shadow-sm flex flex-col relative z-10 rise-in">
+            <div className="shrink-0 flex items-center justify-between px-5 pt-3.5 pb-2.5 border-b border-border">
+              <span className="text-sm font-semibold text-text">Снимки гари в вегетационных индексах</span>
+              <span className="text-[10px] text-text-muted tabular-nums">
                 пожар #{singleFireId} · год пожара {fireYear}
               </span>
-            )}
+            </div>
+            <div className="flex-1 min-h-0 px-6 py-4 overflow-hidden">
+              <RasterGallery fireId={singleFireId} band={index} fireYear={fireYear} />
+            </div>
           </div>
+        )}
+
+        {/* Vegetation cover */}
+        <div className="h-[440px] shrink-0 rounded-2xl border border-border bg-surface/40 shadow-sm flex flex-col relative z-10">
           <div className="flex-1 min-h-0 px-6 py-4 overflow-hidden">
-            {bottomTab === "veg" ? (
-              <VegAreaChart data={vegAreas} period={period} loading={vegLoading} fireYear={fireYear} scope={vegScope.label} scopeActive={vegScope.active} />
-            ) : (
-              <RasterGallery fireId={singleFireId} fireYear={fireYear} />
-            )}
+            <VegAreaChart data={vegAreas} period={period} loading={vegLoading} fireYear={fireYear} scope={vegScope.label} scopeActive={vegScope.active} />
+          </div>
+        </div>
+
+        {/* Overall vegetation state across the territory (NDVI classes by year) */}
+        <div className="h-[360px] shrink-0 rounded-2xl border border-border bg-surface/40 shadow-sm flex flex-col">
+          <div className="flex-1 min-h-0 px-6 py-4 overflow-hidden">
+            <NdviAreasChart fireYear={singleFireId ? fireYear : undefined} />
           </div>
         </div>
       </main>

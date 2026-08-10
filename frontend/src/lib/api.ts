@@ -54,4 +54,12 @@ export const api = {
   // Direct URL to the rendered PNG. Caller provides the band name (NDVI/EVI/...).
   rasterUrl: (fireId: string, year: number, band: string) =>
     `${BASE}/raster/${fireId}/${year}/${band}.png`,
+
+  // Animated GIF cycling through all years for one fire + index (year & VI in
+  // the frame header). Served with Content-Disposition: attachment.
+  rasterGifUrl: (fireId: string, band: string) =>
+    `${BASE}/raster/${fireId}/${band}.gif`,
+
+  // Overall NDVI-class areas by year across the whole study territory.
+  getNdviAreas: () => get<Record<string, string>[]>("/ndvi-areas"),
 };

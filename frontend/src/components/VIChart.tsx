@@ -78,7 +78,7 @@ export default function VIChart({ data, index, period, loading, scope, scopeActi
             Нет данных
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minHeight={160} initialDimension={{ width: 320, height: 200 }}>
             <AreaChart data={filtered} margin={{ top: 6, right: 12, left: -8, bottom: 4 }}>
               <defs>
                 <linearGradient id="viFill" x1="0" y1="0" x2="0" y2="1">

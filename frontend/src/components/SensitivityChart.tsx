@@ -77,7 +77,7 @@ export default function SensitivityChart({ data, index, loading, scope, scopeAct
             Нет данных
           </div>
         ) : (
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minHeight={160} initialDimension={{ width: 320, height: 200 }}>
             <BarChart data={chartData} margin={{ top: 4, right: 12, left: -8, bottom: 4 }}>
               <defs>
                 <linearGradient id="sensPos" x1="0" y1="0" x2="0" y2="1">

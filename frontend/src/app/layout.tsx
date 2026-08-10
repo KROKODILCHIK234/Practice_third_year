@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import InlineScript from "@/components/InlineScript";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,8 +26,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="dark"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        {/* Apply the saved theme before first paint to avoid a flash. Runs
+            synchronously during HTML parsing; falls back to the dark default. */}
+        <InlineScript
+          html={`(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}})()`}
+        />
+      </head>
       <body className="h-full flex flex-col">{children}</body>
     </html>
   );

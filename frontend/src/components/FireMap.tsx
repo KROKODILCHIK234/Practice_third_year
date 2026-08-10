@@ -43,19 +43,22 @@ function featureCentroid(feature: GeoJSON.Feature): [number, number] | null {
   return [sy / ring.length, sx / ring.length]; // [lat, lon] for leaflet
 }
 
+// Selected fire = bright YELLOW outline WITHOUT fill, so it doesn't cover the VI
+// snapshot underneath (teacher: "смысла покрывать снимок оранжевым не вижу", и
+// оранжевый плохо отличался от красного). Unselected = translucent red marker.
 const BASE_STYLE = (selected: boolean) => ({
-  color: selected ? "#f97316" : "#ef4444",
-  weight: selected ? 2 : 1,
-  fillColor: selected ? "#fb923c" : "#ef4444",
-  fillOpacity: selected ? 0.55 : 0.28,
+  color: selected ? "#facc15" : "#ef4444",
+  weight: selected ? 3 : 1,
+  fillColor: selected ? "#facc15" : "#ef4444",
+  fillOpacity: selected ? 0 : 0.28,
   dashArray: undefined as string | undefined,
 });
 
 const HOVER_STYLE = (selected: boolean) => ({
-  color: "#fb923c",
-  weight: 2.5,
-  fillColor: "#fb923c",
-  fillOpacity: selected ? 0.55 : 0.45,
+  color: selected ? "#fde047" : "#fbbf24",
+  weight: selected ? 3.5 : 2.5,
+  fillColor: selected ? "#facc15" : "#fbbf24",
+  fillOpacity: selected ? 0.08 : 0.45,
 });
 
 export default function FireMap({
@@ -95,6 +98,9 @@ export default function FireMap({
         attribution: "© OpenStreetMap",
         maxZoom: 18,
       }).addTo(map);
+      // Drop Leaflet's default attribution prefix (it ships a Ukrainian-flag
+      // SVG next to the "Leaflet" link) — keep a plain text credit instead.
+      map.attributionControl.setPrefix("Leaflet");
       mapInstanceRef.current = map;
     })();
 
@@ -402,7 +408,7 @@ export default function FireMap({
 
             <div>
               <div className="flex items-center justify-between text-[10px] text-text-muted mb-1">
-                <span>Прозрачность</span>
+                <span>Прозрачность снимка</span>
                 <span className="tabular-nums">{Math.round(overlayOpacity * 100)}%</span>
               </div>
               <input

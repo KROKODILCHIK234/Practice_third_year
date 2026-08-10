@@ -1,4 +1,5 @@
 "use client";
+import ThemeToggle from "./ThemeToggle";
 
 interface Props {
   totalFires: number;
@@ -70,10 +71,11 @@ export default function Header({ totalFires, selectedCount, apiOk, yearRange }: 
           href="https://disk.yandex.ru/d/ZgsVuaXOy1qf7A"
           target="_blank"
           rel="noreferrer"
-          className="px-2.5 py-1 rounded-md bg-white/5 hover:bg-white/10 text-text-muted hover:text-text border border-border transition-colors"
+          className="px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover text-text-muted hover:text-text border border-border transition-colors"
         >
           Данные ↗
         </a>
+        <ThemeToggle />
       </div>
     </header>
   );

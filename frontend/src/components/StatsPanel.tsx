@@ -66,6 +66,10 @@ export default function StatsPanel({ fires, selectedFireIds, viData, index }: Pr
   const idxColor = INDEX_COLOR[index] ?? "var(--accent)";
   const hasSel = selectedFireIds.size > 0;
 
+  // Single number format across the strip: whole hectares with thin-space
+  // grouping (188 000), no mixed "k" units — раньше было "188.0k" против "712".
+  const fmtHa = (n: number) => Math.round(n).toLocaleString("ru-RU");
+
   const signed = (n: number, digits = 1) => `${n > 0 ? "+" : ""}${n.toFixed(digits)}%`;
   const devColor = (n: number | null) =>
     n === null ? "var(--text)" : n < 0 ? "var(--danger)" : "var(--accent)";
@@ -83,14 +87,14 @@ export default function StatsPanel({ fires, selectedFireIds, viData, index }: Pr
         />
         <div className="w-px self-stretch my-2.5 bg-border" />
         <Metric
-          label="Σ площадь"
-          value={`${(totalArea / 1000).toFixed(1)}k`}
-          sub="тыс. га"
+          label="Общая площадь"
+          value={fmtHa(totalArea)}
+          sub="га"
         />
         <Metric
-          label="⌀ площадь"
-          value={avgArea.toFixed(0)}
-          sub="га / гарь"
+          label="Средняя площадь"
+          value={fmtHa(avgArea)}
+          sub="га на гарь"
         />
       </div>
 

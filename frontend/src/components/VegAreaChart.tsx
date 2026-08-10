@@ -47,8 +47,8 @@ const SHORT: Record<string, string> = {
   "Вечнозелёные широколиственные леса":              "Шир. вечнозел.",
   "Открытые кустарники":                             "Куст. откр.",
   "Закрытые кустарники":                             "Куст. закр.",
-  "Лесистые саванны":                                "Лес. саванны",
-  "Саванны":                                         "Саванны",
+  "Лесистые саванны":                                "Редколесье",
+  "Саванны":                                         "Разреж. древостой",
   "Луга и пастбища":                                 "Луга",
   "Пашня":                                           "Пашня",
   "Мозаика пашни и естественной растительности":     "Мозаика",
@@ -58,6 +58,15 @@ const SHORT: Record<string, string> = {
   "Малопокрытые территории (песок, скалы, почва)":  "Малопокр.",
   "Постоянный снег и лёд":                           "Снег/лёд",
 };
+
+// Corrected full names for the classes MODIS labels misleadingly (для Сибири
+// "Саванны" — это разреженный древостой, "Лесистые саванны" — редколесье).
+// Used for the hover title so the tooltip/legend read correctly.
+const FULL_NAME: Record<string, string> = {
+  "Саванны": "Разреженный древостой",
+  "Лесистые саванны": "Редколесье",
+};
+const fullName = (key: string) => FULL_NAME[key] ?? key;
 
 // Custom tooltip — renders above cursor, never clipped
 function CustomTooltip({ active, payload, label }: {
@@ -157,7 +166,7 @@ export default function VegAreaChart({ data, period, loading, fireYear, scope, s
           <p className="text-[10px] text-text-muted shrink-0">площадь, га</p>
         </div>
         <div className="flex-1 min-h-0 overflow-visible">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minHeight={160} initialDimension={{ width: 320, height: 200 }}>
             <AreaChart data={filtered} margin={{ top: 4, right: 8, left: -10, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
               <XAxis
@@ -215,7 +224,7 @@ export default function VegAreaChart({ data, period, loading, fireYear, scope, s
             return (
               <div
                 key={key}
-                title={key}
+                title={fullName(key)}
                 className={`group flex items-center gap-2 rounded px-1 py-1 transition-colors hover:bg-surface-hover ${
                   v === 0 ? "opacity-45" : ""
                 }`}

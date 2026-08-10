@@ -3,13 +3,13 @@ import { useState } from "react";
 import type { FiltersConfig, FireMeta } from "@/types";
 
 const VI_META: Record<string, { short: string; desc: string; color: string }> = {
-  NDVI:  { short: "NDVI",  desc: "Вегетационный",         color: "#22c55e" },
-  EVI:   { short: "EVI",   desc: "Улучшенный вег.",        color: "#16a34a" },
-  NBR:   { short: "NBR",   desc: "Индекс горения",         color: "#f97316" },
-  NBR2:  { short: "NBR2",  desc: "Горение v2",             color: "#fb923c" },
-  BAI:   { short: "BAI",   desc: "Площадь ожога",          color: "#ef4444" },
-  NDWI:  { short: "NDWI",  desc: "Водный стресс",          color: "#38bdf8" },
-  SAVI:  { short: "SAVI",  desc: "С попр. на почву",       color: "#a3e635" },
+  NDVI:  { short: "NDVI",  desc: "Состояние растительности",           color: "#22c55e" },
+  EVI:   { short: "EVI",   desc: "Состояние густой растительности",     color: "#16a34a" },
+  NBR:   { short: "NBR",   desc: "Повреждение пожаром",                 color: "#f97316" },
+  NBR2:  { short: "NBR2",  desc: "Влажность после пожара",              color: "#fb923c" },
+  BAI:   { short: "BAI",   desc: "Признаки выгоревшей поверхности",     color: "#ef4444" },
+  NDWI:  { short: "NDWI",  desc: "Влагосодержание растений",           color: "#38bdf8" },
+  SAVI:  { short: "SAVI",  desc: "Состояние разреженной растительности", color: "#a3e635" },
 };
 
 interface Props {
@@ -186,18 +186,17 @@ function NumberStepper({
 
 export default function FilterPanel(props: Props) {
   const {
-    config, fires, selectedFireIds, frname, areaMin, areaMax,
+    config, fires, frname, areaMin, areaMax,
     vegType, index, agg, period,
-    onFireToggle, onFrnameChange, onAreaMinChange, onAreaMaxChange,
+    onFrnameChange, onAreaMinChange, onAreaMaxChange,
     onVegTypeChange, onIndexChange, onAggChange, onPeriodChange,
-    onClearFires, onResetAll,
+    onResetAll,
   } = props;
 
   const absMin = config?.area.min ?? 0;
   const absMax = config?.area.max ?? 10000;
 
   // Compute active-filter counts for badges.
-  const activeFires = selectedFireIds.size;
   const activeFilters = [
     vegType ? 1 : 0,
     frname ? 1 : 0,
@@ -379,49 +378,6 @@ export default function FilterPanel(props: Props) {
             <p className="text-[10px] text-text-dim mt-1.5">
               В текущих данных одно лесничество — фильтр не меняет выборку.
             </p>
-          )}
-        </Section>
-
-        <Divider />
-
-        {/* Selected fires */}
-        <Section id="fires" title="Выбранные пожары" active={activeFires > 0} defaultOpen={activeFires > 0}>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] text-text-muted">
-              кликните на полигон на карте, чтобы выбрать
-            </span>
-            {activeFires > 0 && (
-              <button
-                onClick={onClearFires}
-                className="text-[10px] text-text-muted hover:text-danger transition-colors focus-ring rounded px-1"
-              >
-                сбросить
-              </button>
-            )}
-          </div>
-
-          {activeFires === 0 ? (
-            <p className="text-[11px] text-text-dim leading-relaxed">
-              Нет выбранных пожаров.
-            </p>
-          ) : (
-            <div className="space-y-1 max-h-40 overflow-y-auto scrollbar-thin">
-              {fires
-                .filter((f) => selectedFireIds.has(f.fire_id))
-                .map((f) => (
-                  <div key={f.fire_id} className="flex items-center justify-between bg-surface-2 rounded-lg px-2.5 py-1.5 border border-border group">
-                    <span className="text-xs text-text font-mono tabular-nums">#{f.fire_id}</span>
-                    <span className="text-[11px] text-text-muted tabular-nums">{f.Area.toFixed(0)} га</span>
-                    <button
-                      onClick={() => onFireToggle(f.fire_id)}
-                      className="text-text-dim hover:text-danger transition-colors ml-1 text-sm leading-none w-4 h-4 flex items-center justify-center rounded focus-ring"
-                      aria-label="Убрать"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-            </div>
           )}
         </Section>
 

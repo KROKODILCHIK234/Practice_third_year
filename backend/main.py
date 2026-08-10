@@ -12,7 +12,7 @@ from fastapi.responses import JSONResponse, Response
 import numpy as np
 import rasterio
 from rasterio.warp import transform_bounds
-from PIL import Image
+from PIL import Image, ImageDraw
 
 from colormaps import COLORMAPS, INDEX_COLORMAP
 
@@ -30,7 +30,11 @@ DATA_DIR = Path(__file__).parent.parent / "Data"
 # VI_DIR into a list of dataset directories and concatenate their CSVs in the
 # get_* loaders below — the API contract stays the same. See README → Масштабирование.
 VI_DIR = DATA_DIR / "Vegetation index by fires 2005"
-RASTER_DIR = DATA_DIR / "fire_rasters" / "fire_rasters"
+# Root under which raster .tif files live. The archive unpacks to a nested
+# `fire_rasters/fire_rasters/`, but users often unpack it one level off — so we
+# scan this folder RECURSIVELY (see _scan_rasters) and find the files at any
+# depth. Just drop the unpacked rasters anywhere under Data/fire_rasters/.
+RASTER_DIR = DATA_DIR / "fire_rasters"
 
 # Index names appear in the GeoTIFF as band descriptions in this exact order.
 BAND_NAMES = ("NDVI", "NBR", "NBR2", "EVI", "SAVI", "BAI", "NDWI")
@@ -300,11 +304,18 @@ def get_fires_meta_route(
 # ---------------------------------------------------------------------------
 
 def _scan_rasters() -> dict[str, list[dict]]:
-    """Index raster files by fire_id. Returns {fire_id: [{year, sensor, path}]}."""
+    """Index raster files by fire_id. Returns {fire_id: [{year, sensor, path}]}.
+
+    Searches RASTER_DIR recursively, so the rasters are found no matter how
+    deeply the archive was unpacked under Data/fire_rasters/ — the previous
+    exact-path requirement was the #1 reason snapshots "didn't show up".
+    """
     if not RASTER_DIR.exists():
+        print(f"[rasters] folder not found: {RASTER_DIR} — snapshots will be empty. "
+              f"Unpack the raster archive into Data/fire_rasters/ and restart.")
         return {}
     out: dict[str, list[dict]] = {}
-    for p in RASTER_DIR.iterdir():
+    for p in RASTER_DIR.rglob("*.tif"):
         m = RASTER_RE.match(p.name)
         if not m:
             continue
@@ -312,6 +323,12 @@ def _scan_rasters() -> dict[str, list[dict]]:
         out.setdefault(fid, []).append({"year": year, "sensor": sensor, "path": str(p)})
     for entries in out.values():
         entries.sort(key=lambda r: (r["year"], r["sensor"]))
+    total = sum(len(v) for v in out.values())
+    if total == 0:
+        print(f"[rasters] no matching .tif under {RASTER_DIR} — snapshots will be empty. "
+              f"Expected names like fire<id>_<year>_indices_<sensor>.tif.")
+    else:
+        print(f"[rasters] indexed {total} rasters for {len(out)} fires under {RASTER_DIR}.")
     return out
 
 
@@ -364,15 +381,14 @@ def _find_raster(fire_id: str, year: int) -> Path | None:
     return None
 
 
-def _render_png(raster_path: Path, band_name: str) -> bytes:
-    """Read the requested band from the GeoTIFF, apply colormap, return PNG bytes."""
+def _render_image(raster_path: Path, band_name: str) -> Image.Image:
+    """Read the requested band from the GeoTIFF, apply colormap, return an RGBA image."""
     band_idx = BAND_NAMES.index(band_name) + 1  # rasterio is 1-indexed
     cmap_name, _reverse = INDEX_COLORMAP[band_name]
     lut = COLORMAPS[cmap_name]
 
     with rasterio.open(raster_path) as src:
         arr = src.read(band_idx).astype("float32")
-        bounds = src.bounds  # for client-side overlay
 
     # NaN → transparent; valid pixels normalised against robust percentiles.
     nan_mask = np.isnan(arr)
@@ -395,7 +411,12 @@ def _render_png(raster_path: Path, band_name: str) -> bytes:
     alpha = np.where(nan_mask, 0, 230).astype(np.uint8)  # ~90 % opaque for valid
 
     rgba = np.dstack([rgb, alpha])
-    img = Image.fromarray(rgba, mode="RGBA")
+    return Image.fromarray(rgba, mode="RGBA")
+
+
+def _render_png(raster_path: Path, band_name: str) -> bytes:
+    """Read the requested band from the GeoTIFF, apply colormap, return PNG bytes."""
+    img = _render_image(raster_path, band_name)
     buf = io.BytesIO()
     img.save(buf, format="PNG", optimize=True)
     return buf.getvalue()
@@ -405,6 +426,68 @@ def _render_png(raster_path: Path, band_name: str) -> bytes:
 def _render_png_cached(raster_path_str: str, mtime_ns: int, band_name: str) -> bytes:
     """Cached variant — key includes mtime so edits to the TIF invalidate."""
     return _render_png(Path(raster_path_str), band_name)
+
+
+@lru_cache(maxsize=128)
+def _build_gif(fire_id: str, band_name: str) -> bytes:
+    """Animated GIF cycling through all years of one fire for a given index.
+    Each frame has a header bar with the index name and its year."""
+    entries = sorted(_RASTER_INDEX.get(fire_id, []), key=lambda e: e["year"])
+    rendered: list[tuple[int, Image.Image]] = []
+    for e in entries:
+        p = Path(e["path"])
+        if p.exists():
+            rendered.append((e["year"], _render_image(p, band_name).convert("RGBA")))
+    if not rendered:
+        raise HTTPException(404, f"No rasters for fire_id={fire_id}.")
+
+    # Uniform canvas: scale every frame by one factor (cap the largest side at
+    # 520 px to keep the GIF small) and pad to a common size + header strip.
+    max_w = max(im.width for _, im in rendered)
+    max_h = max(im.height for _, im in rendered)
+    scale = min(1.0, 520 / max(max_w, max_h))
+    cw, ch = max(1, round(max_w * scale)), max(1, round(max_h * scale))
+    header_h = 30
+    bg = (17, 21, 31)
+
+    frames: list[Image.Image] = []
+    for year, im in rendered:
+        canvas = Image.new("RGBA", (cw, ch + header_h), (*bg, 255))
+        fw, fh = max(1, round(im.width * scale)), max(1, round(im.height * scale))
+        frame = im.resize((fw, fh), Image.NEAREST)
+        ox, oy = (cw - fw) // 2, header_h + (ch - fh) // 2
+        canvas.alpha_composite(frame, (ox, oy))
+        draw = ImageDraw.Draw(canvas)
+        draw.text((8, 9), f"{band_name} · {year}", fill=(231, 234, 240, 255))
+        frames.append(canvas.convert("RGB"))
+
+    buf = io.BytesIO()
+    frames[0].save(
+        buf, format="GIF", save_all=True, append_images=frames[1:],
+        duration=1000, loop=0, disposal=2, optimize=True,
+    )
+    return buf.getvalue()
+
+
+@app.get("/api/raster/{fire_id}/{band}.gif")
+def get_raster_gif(fire_id: str, band: str):
+    band = band.upper()
+    if band not in BAND_NAMES:
+        raise HTTPException(400, f"Unknown band '{band}'. Expected one of {BAND_NAMES}.")
+    try:
+        gif = _build_gif(fire_id, band)
+    except HTTPException:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(500, f"Failed to build GIF: {exc}")
+    return Response(
+        content=gif,
+        media_type="image/gif",
+        headers={
+            "Cache-Control": "public, max-age=3600",
+            "Content-Disposition": f'attachment; filename="fire{fire_id}_{band}.gif"',
+        },
+    )
 
 
 @app.get("/api/raster/{fire_id}/{year}/{band}.png")
