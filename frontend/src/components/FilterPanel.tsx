@@ -206,7 +206,7 @@ export default function FilterPanel(props: Props) {
   ].reduce((a, b) => a + b, 0);
 
   return (
-    <aside className="w-[300px] shrink-0 flex flex-col h-full bg-surface border-r border-border overflow-hidden">
+    <aside className="w-[300px] shrink-0 flex flex-col h-full bg-gradient-to-b from-surface to-surface-2/40 border-r border-border overflow-hidden">
       {/* Header */}
       <div className="px-4 py-3.5 border-b border-border shrink-0 bg-surface-2/40">
         <div className="flex items-center justify-between gap-2">
@@ -249,14 +249,15 @@ export default function FilterPanel(props: Props) {
                 <button
                   key={idx}
                   onClick={() => onIndexChange(idx)}
-                  className={`rounded-lg px-2.5 py-2 text-left transition-all border focus-ring ${
+                  className={`lift rounded-lg px-2.5 py-2 text-left border focus-ring ${
                     isActive
                       ? "bg-surface-hover shadow-sm"
                       : "border-border bg-surface-2/50 hover:bg-surface-hover hover:border-border-strong"
                   }`}
                   style={isActive && meta ? {
                     borderColor: `color-mix(in srgb, ${meta.color} 55%, transparent)`,
-                    boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${meta.color} 22%, transparent)`,
+                    boxShadow: `inset 0 0 0 1px color-mix(in srgb, ${meta.color} 22%, transparent), 0 0 16px -4px color-mix(in srgb, ${meta.color} 55%, transparent)`,
+                    background: `color-mix(in srgb, ${meta.color} 8%, var(--surface-hover))`,
                   } : undefined}
                 >
                   <span

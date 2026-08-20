@@ -71,8 +71,14 @@ export default function StatsPanel({ fires, selectedFireIds, viData, index }: Pr
   const fmtHa = (n: number) => Math.round(n).toLocaleString("ru-RU");
 
   const signed = (n: number, digits = 1) => `${n > 0 ? "+" : ""}${n.toFixed(digits)}%`;
-  const devColor = (n: number | null) =>
-    n === null ? "var(--text)" : n < 0 ? "var(--danger)" : "var(--accent)";
+  // Most indices: higher = healthier → positive change is good (green). BAI is a
+  // burn index (higher = more damage), so its meaning is inverted.
+  const goodWhenPositive = index !== "BAI";
+  const devColor = (n: number | null) => {
+    if (n === null) return "var(--text)";
+    const good = (n >= 0) === goodWhenPositive;
+    return good ? "var(--accent)" : "var(--danger)";
+  };
 
   return (
     <div className="flex items-stretch gap-3 h-[88px]">
@@ -138,7 +144,7 @@ export default function StatsPanel({ fires, selectedFireIds, viData, index }: Pr
         <Metric
           label="Восстановление"
           align="right"
-          color={recoveryPct === null ? undefined : recoveryPct < -5 ? "var(--danger)" : "var(--accent)"}
+          color={devColor(recoveryPct)}
           value={recoveryPct === null ? "—" : signed(recoveryPct)}
           sub="до → после"
         />

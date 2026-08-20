@@ -37,6 +37,10 @@ export default function VIChart({ data, index, period, loading, scope, scopeActi
     ? (((firePoint.value - preAvg) / Math.abs(preAvg)) * 100).toFixed(1)
     : null;
 
+  // BAI is a burn index (higher = more damage), so a positive change is "bad".
+  const goodWhenPositive = index !== "BAI";
+  const devIsGood = deviation !== null && (Number(deviation) >= 0) === goodWhenPositive;
+
   const color = INDEX_COLOR[index] ?? "#22c55e";
   const minYsf = filtered.length ? Math.min(...filtered.map((d) => d.years_since_fire)) : 0;
   const hasPre = filtered.some((d) => d.years_since_fire < 0);
@@ -48,7 +52,7 @@ export default function VIChart({ data, index, period, loading, scope, scopeActi
       <div className="flex items-start justify-between mb-4 shrink-0">
         <div className="space-y-1.5 min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="text-sm font-semibold text-text">Динамика {index}</p>
+            <p className="text-sm font-semibold text-text panel-title" style={{ ["--tab" as string]: color }}>Динамика {index}</p>
             <InfoTip text={`Средний ${index} по годам относительно года пожара. Год 0 — год пожара: слева значения до, справа — после. Зона до пожара затенена.`} />
           </div>
           <div className="flex items-center gap-1.5 flex-wrap">
@@ -58,9 +62,7 @@ export default function VIChart({ data, index, period, loading, scope, scopeActi
         </div>
         {deviation !== null && (
           <span className={`text-xs font-bold px-2.5 py-1 rounded-md shrink-0 tabular-nums ${
-            Number(deviation) < 0
-              ? "bg-danger-soft text-danger"
-              : "bg-accent-soft text-accent"
+            devIsGood ? "bg-accent-soft text-accent" : "bg-danger-soft text-danger"
           }`}>
             {Number(deviation) > 0 ? "+" : ""}{deviation}% в год пожара
           </span>

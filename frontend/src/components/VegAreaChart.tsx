@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, ReferenceLine,
@@ -68,53 +69,47 @@ const FULL_NAME: Record<string, string> = {
 };
 const fullName = (key: string) => FULL_NAME[key] ?? key;
 
-// Custom tooltip — renders above cursor, never clipped
+// Compact cursor tooltip — only the year + total area. The full per-type
+// breakdown is shown in the always-visible legend on the right (which reacts to
+// the hovered year), so the floating tooltip stays tiny and never runs off the
+// bottom of the chart or needs its own scrollbar.
 function CustomTooltip({ active, payload, label }: {
   active?: boolean;
   payload?: { dataKey: string; value: number; fill: string }[];
   label?: string | number;
 }) {
   if (!active || !payload?.length) return null;
-  const nonZero = payload.filter((p) => (p.value ?? 0) > 0);
+  const total = payload.reduce((s, p) => s + (Number(p.value) || 0), 0);
   return (
     <div
       style={{
         background: "var(--surface-2)",
         border: "1px solid var(--border-strong)",
         borderRadius: 8,
-        padding: "8px 12px",
+        padding: "6px 10px",
         fontSize: 11,
-        maxHeight: 220,
-        overflowY: "auto",
         boxShadow: "var(--shadow-lg)",
         pointerEvents: "none",
+        whiteSpace: "nowrap",
       }}
     >
-      <p style={{ color: "var(--text-muted)", marginBottom: 6, fontWeight: 600 }}>
-        {label} год
-      </p>
-      {nonZero.slice().reverse().map((p) => (
-        <div key={p.dataKey} style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 3 }}>
-          <span
-            style={{
-              width: 8, height: 8, borderRadius: 2,
-              background: VEG_COLORS[p.dataKey] ?? "var(--text-dim)",
-              flexShrink: 0,
-            }}
-          />
-          <span style={{ color: "var(--text)" }}>
-            {SHORT[p.dataKey] ?? p.dataKey}:
-          </span>
-          <span style={{ color: "var(--text)", fontWeight: 600 }}>
-            {Number(p.value).toFixed(0)} га
-          </span>
-        </div>
-      ))}
+      <span style={{ color: "var(--text-muted)", fontWeight: 600 }}>{label} год</span>
+      <span style={{ color: "var(--text-dim)", margin: "0 6px" }}>·</span>
+      <span style={{ color: "var(--text)", fontWeight: 600 }}>
+        {Math.round(total).toLocaleString("ru-RU")} га
+      </span>
+      <div style={{ color: "var(--text-dim)", fontSize: 9, marginTop: 2 }}>
+        разбивка по типам — справа →
+      </div>
     </div>
   );
 }
 
 export default function VegAreaChart({ data, period, loading, fireYear, scope, scopeActive }: Props) {
+  // Year the cursor is over; drives the right-side legend so the breakdown lives
+  // in a stable panel instead of a cursor-following tooltip that runs off-screen.
+  const [hoverYear, setHoverYear] = useState<number | null>(null);
+
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -141,13 +136,15 @@ export default function VegAreaChart({ data, period, loading, fireYear, scope, s
     return true;
   });
 
-  // Legend reflects the most recent year in view: value per type + share of the
-  // total, sorted by area descending so the dominant covers sit on top. The
-  // chart keeps its ecological stacking order (vegKeys); only the legend sorts.
+  // Legend shows the hovered year (or, when not hovering, the most recent year
+  // in view): value per type + share of the total. Sort order stays fixed to the
+  // latest year so rows don't jump around while hovering — only values update.
   const latest = filtered.length ? filtered[filtered.length - 1] : null;
-  const latestYear = latest?.year;
-  const latestTotal = latest
-    ? vegKeys.reduce((s, k) => s + (latest[k] ?? 0), 0)
+  const activeRow = (hoverYear != null && filtered.find((d) => d.year === hoverYear)) || latest;
+  const activeYear = activeRow?.year;
+  const isHovering = hoverYear != null && activeRow?.year === hoverYear;
+  const activeTotal = activeRow
+    ? vegKeys.reduce((s, k) => s + (activeRow[k] ?? 0), 0)
     : 0;
   const legendKeys = [...vegKeys].sort(
     (a, b) => (latest?.[b] ?? 0) - (latest?.[a] ?? 0)
@@ -159,7 +156,7 @@ export default function VegAreaChart({ data, period, loading, fireYear, scope, s
       <div className="flex-1 min-w-0 h-full flex flex-col">
         <div className="flex items-center justify-between gap-2 mb-3 shrink-0">
           <div className="flex items-center gap-1.5 min-w-0">
-            <p className="text-xs font-semibold text-text truncate">Динамика растительного покрова</p>
+            <p className="text-xs font-semibold text-text truncate panel-title" style={{ ["--tab" as string]: "#22c55e" }}>Динамика растительного покрова</p>
             <InfoTip text="Площади типов растительного покрова (га) по годам, накопительно. Пунктирная линия — год пожара." />
             {scope && <ScopeChip label={scope} active={scopeActive} />}
           </div>
@@ -167,7 +164,15 @@ export default function VegAreaChart({ data, period, loading, fireYear, scope, s
         </div>
         <div className="flex-1 min-h-0 overflow-visible">
           <ResponsiveContainer width="100%" height="100%" minHeight={160} initialDimension={{ width: 320, height: 200 }}>
-            <AreaChart data={filtered} margin={{ top: 4, right: 8, left: -10, bottom: 0 }}>
+            <AreaChart
+              data={filtered}
+              margin={{ top: 4, right: 8, left: -10, bottom: 0 }}
+              onMouseMove={(s: { activeLabel?: string | number } | null) => {
+                const y = s?.activeLabel != null ? Number(s.activeLabel) : null;
+                setHoverYear(Number.isNaN(y as number) ? null : y);
+              }}
+              onMouseLeave={() => setHoverYear(null)}
+            >
               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
               <XAxis
                 dataKey="year"
@@ -184,8 +189,10 @@ export default function VegAreaChart({ data, period, loading, fireYear, scope, s
               />
               <Tooltip
                 content={<CustomTooltip />}
-                allowEscapeViewBox={{ x: false, y: true }}
-                wrapperStyle={{ zIndex: 100, overflow: "visible" }}
+                allowEscapeViewBox={{ x: false, y: false }}
+                position={{ y: 8 }}
+                cursor={{ stroke: "var(--border-strong)", strokeWidth: 1 }}
+                wrapperStyle={{ zIndex: 100 }}
               />
               {fireYear && (
                 <ReferenceLine x={fireYear} stroke="var(--warning)" strokeDasharray="4 3" strokeWidth={1.5} />
@@ -207,20 +214,23 @@ export default function VegAreaChart({ data, period, loading, fireYear, scope, s
         </div>
       </div>
 
-      {/* Legend — vertical right side, sorted by area with values + share */}
+      {/* Legend — vertical right side; reflects the hovered year (fixed panel,
+          so the full breakdown is always readable instead of a runaway tooltip). */}
       <div className="w-48 shrink-0 flex flex-col h-full pt-1">
         <div className="flex items-baseline justify-between mb-1.5 px-1 shrink-0">
           <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">
             Типы покрова
           </span>
-          {latestYear != null && (
-            <span className="text-[9px] text-text-dim tabular-nums">{latestYear}</span>
+          {activeYear != null && (
+            <span className={`text-[9px] tabular-nums font-semibold ${isHovering ? "text-accent" : "text-text-dim"}`}>
+              {activeYear}{isHovering ? " ●" : ""}
+            </span>
           )}
         </div>
         <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin pr-0.5 space-y-px">
           {legendKeys.map((key) => {
-            const v = latest?.[key] ?? 0;
-            const share = latestTotal > 0 ? (v / latestTotal) * 100 : 0;
+            const v = activeRow?.[key] ?? 0;
+            const share = activeTotal > 0 ? (v / activeTotal) * 100 : 0;
             return (
               <div
                 key={key}

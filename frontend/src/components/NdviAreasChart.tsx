@@ -53,7 +53,7 @@ export default function NdviAreasChart({ fireYear }: Props) {
     <div className="h-full flex flex-col min-h-0">
       <div className="flex items-center justify-between gap-2 mb-3 shrink-0">
         <div className="flex items-center gap-1.5 min-w-0">
-          <p className="text-xs font-semibold text-text truncate">
+          <p className="text-xs font-semibold text-text truncate panel-title" style={{ ["--tab" as string]: "#4a9d5b" }}>
             Состояние растительности по территории · классы NDVI
           </p>
           <InfoTip text="Площади (га) по классам NDVI за каждый год по всей территории исследования: от низких классов (гарь, открытая почва) к высоким (густая растительность). Данные dashboard_ndvi_areas.csv." />

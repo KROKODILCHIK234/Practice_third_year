@@ -53,6 +53,25 @@ def load_json(path: Path):
         return json.load(f)
 
 
+# An empty GeoJSON layer — returned when a source file is missing so the map
+# still loads (a 500 here surfaces in the browser as a confusing CORS error
+# rather than the real "file not found" cause).
+_EMPTY_FC = {"type": "FeatureCollection", "features": []}
+
+
+def load_geojson_safe(path: Path, label: str):
+    """Load a GeoJSON layer, or return an empty collection + a clear log if the
+    file is missing / unreadable. Keeps one missing layer from breaking the app."""
+    if not path.exists():
+        print(f"[geojson] {label} not found: {path} — layer will be empty.")
+        return _EMPTY_FC
+    try:
+        return load_json(path)
+    except Exception as exc:  # noqa: BLE001
+        print(f"[geojson] failed to read {label} ({path}): {exc} — layer will be empty.")
+        return _EMPTY_FC
+
+
 # Cache data at startup
 _fires_geojson = None
 _lesnichestva_geojson = None
@@ -64,14 +83,14 @@ _veg_areas: list[dict] | None = None
 def get_fires_geojson():
     global _fires_geojson
     if _fires_geojson is None:
-        _fires_geojson = load_json(DATA_DIR / "fires_2005_vi.geojson")
+        _fires_geojson = load_geojson_safe(DATA_DIR / "fires_2005_vi.geojson", "fires")
     return _fires_geojson
 
 
 def get_lesnichestva():
     global _lesnichestva_geojson
     if _lesnichestva_geojson is None:
-        _lesnichestva_geojson = load_json(DATA_DIR / "lesnichestva.geojson")
+        _lesnichestva_geojson = load_geojson_safe(DATA_DIR / "lesnichestva.geojson", "lesnichestva")
     return _lesnichestva_geojson
 
 

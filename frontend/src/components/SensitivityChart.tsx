@@ -15,6 +15,13 @@ interface Props {
 }
 
 export default function SensitivityChart({ data, index, loading, scope, scopeActive }: Props) {
+  // For most indices higher = healthier, so a positive deviation is "good"
+  // (green). BAI is a burn index: higher = more damage, so the meaning of
+  // positive/negative is inverted.
+  const goodWhenPositive = index !== "BAI";
+  const isGood = (v: number) => (v >= 0) === goodWhenPositive;
+  const devClass = (v: number) => (isGood(v) ? "text-accent" : "text-danger");
+
   const preAvg = (() => {
     const pre = data.filter((d) => d.years_since_fire < 0 && d.value !== null);
     return pre.length ? pre.reduce((s, d) => s + (d.value ?? 0), 0) / pre.length : null;
@@ -40,8 +47,10 @@ export default function SensitivityChart({ data, index, loading, scope, scopeAct
       <div className="flex items-start justify-between mb-4 shrink-0">
         <div className="space-y-1.5 min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="text-sm font-semibold text-text">Чувствительность {index}</p>
-            <InfoTip text={`На сколько процентов ${index} в каждом году отклоняется от среднего за годы до пожара. Отрицательные (красные) — растительность пострадала, положительные (зелёные) — превышает допожарный уровень.`} />
+            <p className="text-sm font-semibold text-text panel-title" style={{ ["--tab" as string]: "var(--warning)" }}>Чувствительность {index}</p>
+            <InfoTip text={goodWhenPositive
+              ? `На сколько процентов ${index} в каждом году отклоняется от среднего за годы до пожара. Отрицательные (красные) — растительность пострадала, положительные (зелёные) — превышает допожарный уровень.`
+              : `На сколько процентов ${index} отклоняется от среднего за годы до пожара. ${index} — индекс повреждения: положительные (красные) — сильнее выгорело, отрицательные (зелёные) — ближе к допожарному состоянию.`} />
           </div>
           <div className="flex items-center gap-1.5 flex-wrap">
             {scope && <ScopeChip label={scope} active={scopeActive} />}
@@ -53,11 +62,11 @@ export default function SensitivityChart({ data, index, loading, scope, scopeAct
             <div className="text-right">
               <p className="text-[10px] text-text-dim">min / max</p>
               <p className="text-xs font-semibold tabular-nums">
-                <span className={minDev < 0 ? "text-danger" : "text-accent"}>
+                <span className={devClass(minDev)}>
                   {minDev > 0 ? "+" : ""}{minDev.toFixed(1)}%
                 </span>
                 <span className="text-text-dim mx-1">/</span>
-                <span className={maxDev < 0 ? "text-danger" : "text-accent"}>
+                <span className={devClass(maxDev)}>
                   {maxDev > 0 ? "+" : ""}{maxDev.toFixed(1)}%
                 </span>
               </p>
@@ -132,7 +141,7 @@ export default function SensitivityChart({ data, index, loading, scope, scopeAct
               />
               <Bar dataKey="dev" radius={[3, 3, 0, 0]} maxBarSize={16} isAnimationActive={false}>
                 {chartData.map((d, i) => (
-                  <Cell key={i} fill={d.dev >= 0 ? "url(#sensPos)" : "url(#sensNeg)"} />
+                  <Cell key={i} fill={isGood(d.dev) ? "url(#sensPos)" : "url(#sensNeg)"} />
                 ))}
               </Bar>
             </BarChart>

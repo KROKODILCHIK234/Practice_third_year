@@ -15,7 +15,7 @@ interface Props {
  */
 export default function Header({ totalFires, selectedCount, apiOk, yearRange }: Props) {
   return (
-    <header className="shrink-0 h-12 px-5 flex items-center gap-4 bg-surface/70 backdrop-blur border-b border-border">
+    <header className="shrink-0 h-14 px-5 flex items-center gap-4 bg-gradient-to-b from-surface/85 to-surface/60 backdrop-blur-xl border-b border-border shadow-sm relative z-20">
       {/* Brand */}
       <div className="flex items-center gap-2.5">
         <div className="relative w-7 h-7 rounded-lg bg-gradient-to-br from-accent/30 to-warning/20 border border-accent/30 flex items-center justify-center">
@@ -71,7 +71,7 @@ export default function Header({ totalFires, selectedCount, apiOk, yearRange }: 
           href="https://disk.yandex.ru/d/ZgsVuaXOy1qf7A"
           target="_blank"
           rel="noreferrer"
-          className="px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover text-text-muted hover:text-text border border-border transition-colors"
+          className="lift px-2.5 py-1 rounded-md bg-surface-2 hover:bg-surface-hover text-text-muted hover:text-text border border-border"
         >
           Данные ↗
         </a>

@@ -192,10 +192,10 @@ export default function Dashboard() {
       />
 
       {/* Main content — spacious card-based layout */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-x-clip gap-3 p-3">
+      <main className="flex-1 flex flex-col min-w-0 overflow-x-clip gap-3.5 p-3.5">
 
         {/* Stats strip */}
-        <div className="shrink-0 rise-in">
+        <div className="shrink-0 rise-in-stagger" style={{ ["--d" as string]: "0ms" }}>
           <StatsPanel fires={fires} selectedFireIds={selectedFireIds} viData={viData} index={index} />
         </div>
 
@@ -210,10 +210,10 @@ export default function Dashboard() {
         </div>
 
         {/* Centre: map + right charts */}
-        <div className="flex-1 flex gap-3 min-h-[580px]">
+        <div className="flex-1 flex gap-3.5 min-h-[580px] rise-in-stagger" style={{ ["--d" as string]: "60ms" }}>
 
           {/* Map card */}
-          <div className="flex-1 relative min-w-0 rounded-2xl overflow-hidden border border-border shadow-md">
+          <div className="panel panel-hover flex-1 relative min-w-0 overflow-hidden !rounded-2xl">
             <FireMap
               firesGeoJSON={firesGeoJSON}
               lesnichestvaGeoJSON={lesnGeoJSON}
@@ -223,8 +223,8 @@ export default function Dashboard() {
               overlayIndex={index}
               overlayFireYear={fireYear}
             />
-            <div className="absolute bottom-3 left-3 flex items-center gap-2 bg-surface/85 backdrop-blur rounded-lg px-3 py-1.5 text-xs text-text-muted pointer-events-none select-none border border-border shadow-md max-w-[min(90%,420px)]">
-              <span className="w-1.5 h-1.5 rounded-full bg-warning shrink-0" />
+            <div className="absolute bottom-3 left-3 flex items-center gap-2 bg-surface/85 backdrop-blur rounded-lg px-3 py-1.5 text-xs text-text-muted pointer-events-none select-none border border-border shadow-md max-w-[min(90%,420px)] z-[400]">
+              <span className="w-1.5 h-1.5 rounded-full bg-warning shrink-0 pulse-glow" />
               {selectedFireIds.size === 0
                 ? "Кликните на гарь — все графики пересчитаются под неё"
                 : "Повторный клик снимает выбор · можно выбрать несколько гарей"}
@@ -232,11 +232,11 @@ export default function Dashboard() {
           </div>
 
           {/* Right charts column — two stacked chart cards */}
-          <div className="w-[440px] shrink-0 flex flex-col gap-3 min-h-0">
-            <div className="flex-1 min-h-0 px-5 py-4 rounded-2xl border border-border bg-surface/40 shadow-sm flex flex-col">
+          <div className="w-[440px] shrink-0 flex flex-col gap-3.5 min-h-0">
+            <div className="panel panel-hover flex-1 min-h-0 px-5 py-4 flex flex-col">
               <VIChart data={viData} index={index} period={period} loading={viLoading} scope={viScope.label} scopeActive={viScope.active} />
             </div>
-            <div className="flex-1 min-h-0 px-5 py-4 rounded-2xl border border-border bg-surface/40 shadow-sm flex flex-col">
+            <div className="panel panel-hover flex-1 min-h-0 px-5 py-4 flex flex-col">
               <SensitivityChart data={viData} index={index} loading={viLoading} scope={viScope.label} scopeActive={viScope.active} />
             </div>
           </div>
@@ -245,9 +245,9 @@ export default function Dashboard() {
         {/* Snapshots of the selected fire — shown right under the map when a
             single fire is chosen (no tabs; the vegetation block moves below). */}
         {singleFireId && (
-          <div className="shrink-0 h-[470px] rounded-2xl border border-border bg-surface/40 shadow-sm flex flex-col relative z-10 rise-in">
+          <div className="panel shrink-0 h-[470px] flex flex-col relative z-10 rise-in">
             <div className="shrink-0 flex items-center justify-between px-5 pt-3.5 pb-2.5 border-b border-border">
-              <span className="text-sm font-semibold text-text">Снимки гари в вегетационных индексах</span>
+              <span className="text-sm font-semibold text-text panel-title">Снимки гари в вегетационных индексах</span>
               <span className="text-[10px] text-text-muted tabular-nums">
                 пожар #{singleFireId} · год пожара {fireYear}
               </span>
@@ -259,14 +259,14 @@ export default function Dashboard() {
         )}
 
         {/* Vegetation cover */}
-        <div className="h-[440px] shrink-0 rounded-2xl border border-border bg-surface/40 shadow-sm flex flex-col relative z-10">
+        <div className="panel panel-hover h-[440px] shrink-0 flex flex-col relative z-10 rise-in-stagger" style={{ ["--d" as string]: "120ms" }}>
           <div className="flex-1 min-h-0 px-6 py-4 overflow-hidden">
             <VegAreaChart data={vegAreas} period={period} loading={vegLoading} fireYear={fireYear} scope={vegScope.label} scopeActive={vegScope.active} />
           </div>
         </div>
 
         {/* Overall vegetation state across the territory (NDVI classes by year) */}
-        <div className="h-[360px] shrink-0 rounded-2xl border border-border bg-surface/40 shadow-sm flex flex-col">
+        <div className="panel panel-hover h-[360px] shrink-0 flex flex-col rise-in-stagger" style={{ ["--d" as string]: "180ms" }}>
           <div className="flex-1 min-h-0 px-6 py-4 overflow-hidden">
             <NdviAreasChart fireYear={singleFireId ? fireYear : undefined} />
           </div>

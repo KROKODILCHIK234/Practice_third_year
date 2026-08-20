@@ -8,29 +8,31 @@
    --------------------------------------------------------------------- */
 
 :root {
-  /* Surfaces — layered from deepest to highest */
-  --bg:               #0b0e15;   /* page background */
-  --bg-grad-start:    #0d1118;
-  --bg-grad-end:      #0a0c12;
-  --surface:          #11151f;   /* panels, cards */
-  --surface-2:        #161b27;   /* nested surfaces (chart bg, etc.) */
-  --surface-hover:    #1c2230;
-  --border:           rgba(255, 255, 255, 0.07);
-  --border-strong:    rgba(255, 255, 255, 0.13);
+  /* Surfaces — layered from deepest to highest. Cool near-black navy base with
+     a faint blue undertone rising through the elevation steps → calmer, more
+     "editorial" depth than flat grey. */
+  --bg:               #080a10;   /* page background */
+  --bg-grad-start:    #0c1019;
+  --bg-grad-end:      #070910;
+  --surface:          #10141e;   /* panels, cards */
+  --surface-2:        #171d2a;   /* nested surfaces (chart bg, etc.) */
+  --surface-hover:    #1e2535;
+  --border:           rgba(148, 163, 199, 0.12);
+  --border-strong:    rgba(148, 163, 199, 0.22);
 
-  /* Text */
-  --text:             #e7eaf0;
-  --text-muted:       #a0a8b8;
-  --text-dim:         #6b7384;
+  /* Text — a touch brighter/cooler for crisper contrast on the deep base */
+  --text:             #eef1f7;
+  --text-muted:       #a6afc2;
+  --text-dim:         #707a90;
 
   /* Brand & semantic accents */
   --accent:           #34d399;   /* emerald-400 — primary action / selected */
   --accent-2:         #10b981;   /* emerald-500 — pressed */
-  --accent-soft:      rgba(52, 211, 153, 0.12);
-  --warning:          #f97316;   /* orange-500 — fire, period labels */
-  --warning-soft:     rgba(249, 115, 22, 0.12);
-  --danger:           #ef4444;   /* red-500 — error / negative deviation */
-  --danger-soft:      rgba(239, 68, 68, 0.12);
+  --accent-soft:      rgba(52, 211, 153, 0.13);
+  --warning:          #fb923c;   /* orange-400 — fire, period labels */
+  --warning-soft:     rgba(251, 146, 60, 0.13);
+  --danger:           #f2555a;   /* softened red — error / negative deviation */
+  --danger-soft:      rgba(242, 85, 90, 0.13);
   --info:             #38bdf8;   /* sky-400 */
   --info-soft:        rgba(56, 189, 248, 0.10);
 
@@ -43,18 +45,18 @@
   --vi-ndwi:  #38bdf8;
   --vi-savi:  #a3e635;
 
-  /* Shadows — soft, layered */
-  --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.35);
-  --shadow-md:  0 4px 12px rgba(0, 0, 0, 0.45);
-  --shadow-lg:  0 12px 36px rgba(0, 0, 0, 0.55);
+  /* Shadows — soft, diffuse, layered (ambient + contact) for gentle depth */
+  --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.30), 0 1px 1px rgba(0, 0, 0, 0.20);
+  --shadow-md:  0 6px 20px -6px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.30);
+  --shadow-lg:  0 20px 48px -12px rgba(0, 0, 0, 0.65), 0 6px 16px rgba(0, 0, 0, 0.40);
 
-  /* Radii */
-  --radius-sm: 6px;
-  --radius:    10px;
-  --radius-lg: 14px;
+  /* Radii — a bit softer for a modern, calm feel */
+  --radius-sm: 8px;
+  --radius:    12px;
+  --radius-lg: 16px;
 
   /* Focus ring */
-  --ring: 0 0 0 2px rgba(52, 211, 153, 0.45);
+  --ring: 0 0 0 2px var(--bg), 0 0 0 4px rgba(52, 211, 153, 0.55);
 
   color-scheme: dark;
 }
@@ -66,34 +68,34 @@
    index identity, not chrome).
    --------------------------------------------------------------------- */
 :root[data-theme="light"] {
-  --bg:               #eef2f7;
-  --bg-grad-start:    #f5f8fc;
-  --bg-grad-end:      #e6ebf2;
+  --bg:               #eef1f6;
+  --bg-grad-start:    #f7f9fc;
+  --bg-grad-end:      #e7ecf3;
   --surface:          #ffffff;
-  --surface-2:        #f2f5fa;
-  --surface-hover:    #e7ecf3;
-  --border:           rgba(15, 23, 42, 0.10);
-  --border-strong:    rgba(15, 23, 42, 0.20);
+  --surface-2:        #f4f7fb;
+  --surface-hover:    #eaeff6;
+  --border:           rgba(15, 23, 42, 0.09);
+  --border-strong:    rgba(15, 23, 42, 0.18);
 
-  --text:             #131722;
+  --text:             #101623;
   --text-muted:       #4a5468;
-  --text-dim:         #78829a;
+  --text-dim:         #7a849a;
 
-  --accent:           #10b981;
-  --accent-2:         #059669;
-  --accent-soft:      rgba(16, 185, 129, 0.14);
-  --warning:          #ea580c;
-  --warning-soft:     rgba(234, 88, 12, 0.12);
-  --danger:           #dc2626;
-  --danger-soft:      rgba(220, 38, 38, 0.12);
+  --accent:           #059f74;
+  --accent-2:         #047a58;
+  --accent-soft:      rgba(5, 159, 116, 0.13);
+  --warning:          #e0680f;
+  --warning-soft:     rgba(224, 104, 15, 0.12);
+  --danger:           #d83a3f;
+  --danger-soft:      rgba(216, 58, 63, 0.12);
   --info:             #0284c7;
   --info-soft:        rgba(2, 132, 199, 0.10);
 
-  --shadow-sm:  0 1px 2px rgba(15, 23, 42, 0.08);
-  --shadow-md:  0 4px 14px rgba(15, 23, 42, 0.10);
-  --shadow-lg:  0 12px 36px rgba(15, 23, 42, 0.16);
+  --shadow-sm:  0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-md:  0 8px 24px -8px rgba(15, 23, 42, 0.14), 0 2px 6px rgba(15, 23, 42, 0.06);
+  --shadow-lg:  0 20px 48px -14px rgba(15, 23, 42, 0.20), 0 6px 16px rgba(15, 23, 42, 0.08);
 
-  --ring: 0 0 0 2px rgba(16, 185, 129, 0.45);
+  --ring: 0 0 0 2px var(--bg), 0 0 0 4px rgba(5, 159, 116, 0.5);
 
   color-scheme: light;
 }
@@ -137,15 +139,27 @@ html, body {
 
 body {
   background:
-    radial-gradient(ellipse at top left, rgba(52, 211, 153, 0.06), transparent 60%),
-    radial-gradient(ellipse at bottom right, rgba(249, 115, 22, 0.04), transparent 55%),
+    radial-gradient(1200px 600px at 8% -5%, rgba(52, 211, 153, 0.09), transparent 55%),
+    radial-gradient(1100px 620px at 100% 8%, rgba(56, 189, 248, 0.055), transparent 55%),
+    radial-gradient(1000px 700px at 88% 108%, rgba(251, 146, 60, 0.05), transparent 55%),
     linear-gradient(180deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%);
+  background-attachment: fixed;
   color: var(--text);
   font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   font-feature-settings: "ss01", "cv11", "tnum";
+  letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+:root[data-theme="light"] body {
+  background:
+    radial-gradient(1200px 600px at 8% -5%, rgba(5, 159, 116, 0.08), transparent 55%),
+    radial-gradient(1100px 620px at 100% 8%, rgba(2, 132, 199, 0.05), transparent 55%),
+    radial-gradient(1000px 700px at 88% 108%, rgba(224, 104, 15, 0.045), transparent 55%),
+    linear-gradient(180deg, var(--bg-grad-start) 0%, var(--bg-grad-end) 100%);
+  background-attachment: fixed;
 }
 
 /* Better scrollbars (Webkit) */
@@ -158,11 +172,14 @@ body {
   background: transparent;
 }
 *::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 4px;
+  background: rgba(148, 163, 199, 0.16);
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.16);
+  background: rgba(148, 163, 199, 0.30);
+  background-clip: padding-box;
 }
 
 /* Selection */
@@ -205,8 +222,10 @@ body {
 /* Metric group card — used in the stats strip */
 .metric-group {
   position: relative;
+  overflow: hidden;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0) 55%),
+    radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--rail, var(--accent)) 8%, transparent), transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0) 55%),
     var(--surface-2);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -214,8 +233,8 @@ body {
   transition: border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 .metric-group:hover {
-  border-color: var(--border-strong);
-  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--rail, var(--accent)) 30%, var(--border));
+  transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
 /* Accent rail on the left edge, colour set per-group via --rail */
@@ -228,7 +247,8 @@ body {
   width: 3px;
   border-radius: 0 3px 3px 0;
   background: var(--rail, var(--accent));
-  opacity: 0.9;
+  box-shadow: 0 0 12px -2px var(--rail, var(--accent));
+  opacity: 0.95;
 }
 
 /* Raster thumbnail tile — accent colour set per-band via --ca */
@@ -253,6 +273,100 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 .rise-in { animation: rise-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Staggered entrance — set --d per element for a cascade of cards. */
+.rise-in-stagger { animation: rise-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: var(--d, 0ms); }
+
+/* ---------------------------------------------------------------------
+   Panel — the one shared surface for every dashboard block, so the layout
+   reads as a consistent set of cards instead of loose pieces. Gentle lift +
+   accent-tinted border on hover ties them together.
+   --------------------------------------------------------------------- */
+.panel {
+  position: relative;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,0.022), rgba(255,255,255,0) 46%), var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease;
+}
+/* Hairline highlight along the very top edge → subtle glass/bevel. */
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.10) 20%, rgba(255,255,255,0.10) 80%, transparent);
+  pointer-events: none;
+}
+:root[data-theme="light"] .panel {
+  background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0) 46%), var(--surface);
+}
+:root[data-theme="light"] .panel::before {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9) 20%, rgba(255,255,255,0.9) 80%, transparent);
+}
+.panel-hover:hover {
+  border-color: color-mix(in srgb, var(--accent) 38%, var(--border));
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* A block heading with a small accent tab on the left — one consistent title
+   treatment across panels so the eye finds section starts quickly. */
+.panel-title {
+  position: relative;
+  padding-left: 12px;
+}
+.panel-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--tab, var(--accent));
+  box-shadow: 0 0 8px -1px var(--tab, var(--accent));
+}
+
+/* Generic hover-lift for interactive tiles/buttons/chips. */
+.lift {
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+}
+.lift:hover {
+  transform: translateY(-1px);
+}
+
+/* Icon/button press feedback. */
+.press { transition: transform 0.12s ease; }
+.press:active { transform: scale(0.94); }
+
+/* Shimmer sweep used on the "Скачать GIF" button hover. */
+@keyframes sheen {
+  from { background-position: -140% 0; }
+  to   { background-position: 240% 0; }
+}
+.sheen-hover { position: relative; overflow: hidden; }
+.sheen-hover::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.22) 48%, transparent 62%);
+  background-size: 200% 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+.sheen-hover:hover::after {
+  opacity: 1;
+  animation: sheen 0.8s ease;
+}
+
+/* Respect reduced-motion — disable non-essential animation. */
+@media (prefers-reduced-motion: reduce) {
+  .rise-in, .rise-in-stagger, .pulse-glow, .sheen-hover::after { animation: none; }
+  .panel-hover:hover, .lift:hover { transform: none; }
+}
 
 /* Pulse glow for "live" indicators */
 @keyframes pulse-glow {

@@ -111,7 +111,7 @@ export default function RasterGallery({ fireId, band, fireYear = 2005 }: Props) 
             <a
               href={api.rasterGifUrl(fireId, band)}
               download={`fire${fireId}_${band}.gif`}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold border transition-colors focus-ring"
+              className="lift sheen-hover flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold border focus-ring"
               style={{ color: meta.color, borderColor: `color-mix(in srgb, ${meta.color} 50%, transparent)`, background: `color-mix(in srgb, ${meta.color} 13%, transparent)` }}
               title="Скачать анимацию изменения по годам (GIF)"
             >
@@ -135,14 +135,14 @@ export default function RasterGallery({ fireId, band, fireYear = 2005 }: Props) 
       {/* Thumbnails — FULL (uncropped) images so adjacent years are comparable. */}
       <div className="flex-1 min-h-0 overflow-y-auto scrollbar-thin">
         <div className="grid grid-cols-[repeat(auto-fill,minmax(230px,1fr))] gap-4 pr-1 pb-1">
-          {sortedYears.map((year) => {
+          {sortedYears.map((year, i) => {
             const isFireYear = year === fireYear;
             return (
               <button
                 key={year}
                 onClick={() => setZoomYear(year)}
-                className="raster-tile group relative rounded-xl overflow-hidden border border-border bg-bg focus-ring text-left"
-                style={{ ["--ca" as string]: meta.color }}
+                className="raster-tile rise-in-stagger group relative rounded-xl overflow-hidden border border-border bg-bg focus-ring text-left"
+                style={{ ["--ca" as string]: meta.color, ["--d" as string]: `${i * 55}ms` }}
               >
                 <div className="w-full h-[190px] flex items-center justify-center p-1.5">
                   <img
