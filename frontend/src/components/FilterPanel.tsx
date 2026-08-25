@@ -40,11 +40,11 @@ type SectionId = "index" | "period" | "veg" | "area" | "forest" | "fires";
 function SectionLabel({ children, count }: { children: React.ReactNode; count?: number }) {
   return (
     <div className="flex items-baseline justify-between mb-2">
-      <p className="text-[10px] font-semibold tracking-widest text-text-dim uppercase">
+      <p className="text-[11px] font-semibold tracking-widest text-text-dim uppercase">
         {children}
       </p>
       {count !== undefined && count > 0 && (
-        <span className="text-[10px] text-accent tabular-nums font-medium">
+        <span className="text-[11px] text-accent tabular-nums font-medium">
           {count}
         </span>
       )}
@@ -80,12 +80,12 @@ function Section({
               active ? "bg-accent" : "bg-text-dim/40"
             }`}
           />
-          <span className="text-xs font-semibold text-text uppercase tracking-wider">
+          <span className="text-[13px] font-semibold text-text uppercase tracking-wider">
             {title}
           </span>
         </span>
         <span
-          className={`text-text-dim transition-transform duration-200 text-[10px] ${
+          className={`text-text-dim transition-transform duration-200 text-[11px] ${
             open ? "rotate-90" : ""
           }`}
         >
@@ -117,7 +117,7 @@ function CustomSelect({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full appearance-none bg-surface-2 border border-border text-text rounded-lg pl-3 pr-8 py-2 text-sm hover:border-border-strong focus:outline-none focus:border-accent focus:bg-surface-hover transition-colors focus-ring"
+        className="w-full appearance-none bg-surface-2 border border-border text-text rounded-lg pl-3 pr-8 py-2 text-[15px] hover:border-border-strong focus:outline-none focus:border-accent focus:bg-surface-hover transition-colors focus-ring"
       >
         <option value="">{placeholder}</option>
         {options.map((o) => (
@@ -126,7 +126,7 @@ function CustomSelect({
           </option>
         ))}
       </select>
-      <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-text-dim text-[10px]">
+      <span className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-text-dim text-[11px]">
         ▼
       </span>
     </div>
@@ -158,13 +158,13 @@ function NumberStepper({
           if (raw === "") return; // allow transient empty field while typing
           onChange(Math.max(min, Math.min(max, Number(raw))));
         }}
-        className="w-full bg-surface-2 border border-border text-text rounded-lg pl-3 pr-7 py-2 text-sm tabular-nums hover:border-border-strong focus:outline-none focus:border-accent focus:bg-surface-hover transition-colors focus-ring"
+        className="w-full bg-surface-2 border border-border text-text rounded-lg pl-3 pr-7 py-2 text-[15px] tabular-nums hover:border-border-strong focus:outline-none focus:border-accent focus:bg-surface-hover transition-colors focus-ring"
       />
       <div className="absolute right-1 top-1 bottom-1 flex flex-col w-5">
         <button
           type="button"
           onClick={() => onChange(Math.min(max, value + step))}
-          className="flex-1 text-text-dim hover:text-text text-[8px] leading-none rounded-tr focus-ring"
+          className="flex-1 text-text-dim hover:text-text text-[9px] leading-none rounded-tr focus-ring"
           aria-label="Увеличить"
           tabIndex={-1}
         >
@@ -173,7 +173,7 @@ function NumberStepper({
         <button
           type="button"
           onClick={() => onChange(Math.max(min, value - step))}
-          className="flex-1 text-text-dim hover:text-text text-[8px] leading-none rounded-br focus-ring"
+          className="flex-1 text-text-dim hover:text-text text-[9px] leading-none rounded-br focus-ring"
           aria-label="Уменьшить"
           tabIndex={-1}
         >
@@ -206,17 +206,17 @@ export default function FilterPanel(props: Props) {
   ].reduce((a, b) => a + b, 0);
 
   return (
-    <aside className="w-[300px] shrink-0 flex flex-col h-full bg-gradient-to-b from-surface to-surface-2/40 border-r border-border overflow-hidden">
+    <aside className="w-[300px] shrink-0 self-stretch flex flex-col bg-gradient-to-b from-surface to-surface-2/40 border-r border-border overflow-hidden">
       {/* Header */}
       <div className="px-4 py-3.5 border-b border-border shrink-0 bg-surface-2/40">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 min-w-0">
             <span className="w-2 h-2 rounded-full bg-accent pulse-glow shrink-0" />
-            <h1 className="text-sm font-semibold text-text tracking-tight truncate">
+            <h1 className="text-[15px] font-semibold text-text tracking-tight truncate">
               Фильтры
             </h1>
             {activeFilters > 0 && (
-              <span className="text-[10px] text-accent bg-accent-soft px-1.5 py-0.5 rounded-full tabular-nums font-medium shrink-0">
+              <span className="text-[11px] text-accent bg-accent-soft px-1.5 py-0.5 rounded-full tabular-nums font-medium shrink-0">
                 {activeFilters} активных
               </span>
             )}
@@ -224,14 +224,14 @@ export default function FilterPanel(props: Props) {
           {activeFilters > 0 && (
             <button
               onClick={onResetAll}
-              className="text-[10px] text-text-dim hover:text-danger transition-colors shrink-0 focus-ring rounded px-1"
+              className="text-[11px] text-text-dim hover:text-danger transition-colors shrink-0 focus-ring rounded px-1"
               title="Сбросить все фильтры"
             >
               сбросить
             </button>
           )}
         </div>
-        <p className="text-[11px] text-text-muted pl-4 mt-0.5">
+        <p className="text-[12px] text-text-muted pl-4 mt-0.5">
           {fires.length} {pluralize(fires.length, "пожар", "пожара", "пожаров")} в базе
         </p>
       </div>
@@ -261,12 +261,12 @@ export default function FilterPanel(props: Props) {
                   } : undefined}
                 >
                   <span
-                    className="block text-sm font-bold mb-0.5 tabular-nums"
+                    className="block text-[15px] font-bold mb-0.5 tabular-nums"
                     style={{ color: isActive ? meta?.color : "var(--text-dim)" }}
                   >
                     {idx}
                   </span>
-                  <span className="block text-[11px] leading-tight text-text-muted">
+                  <span className="block text-[12px] leading-tight text-text-muted">
                     {meta?.desc ?? ""}
                   </span>
                 </button>
@@ -284,7 +284,7 @@ export default function FilterPanel(props: Props) {
             <button
               key={a}
               onClick={() => onAggChange(a)}
-              className={`flex-1 py-2 text-xs font-medium transition-colors focus-ring ${
+              className={`flex-1 py-2 text-[13px] font-medium transition-colors focus-ring ${
                 i > 0 ? "border-l border-border" : ""
               } ${
                 agg === a
@@ -296,7 +296,7 @@ export default function FilterPanel(props: Props) {
             </button>
           ))}
         </div>
-        <p className="text-[10px] text-text-dim mb-0">
+        <p className="text-[11px] text-text-dim mb-0">
           median — устойчиво к выбросам
         </p>
 
@@ -313,13 +313,13 @@ export default function FilterPanel(props: Props) {
                 <button
                   key={p}
                   onClick={() => onPeriodChange(p)}
-                  className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-all border focus-ring ${
+                  className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-[15px] transition-all border focus-ring ${
                     isActive
                       ? "border-warning/50 bg-warning-soft text-warning"
                       : "border-transparent text-text-muted hover:bg-surface-hover hover:text-text"
                   }`}
                 >
-                  <span className="text-[10px] opacity-60">{icons[p]}</span>
+                  <span className="text-[11px] opacity-60">{icons[p]}</span>
                   {labels[p]}
                 </button>
               );
@@ -360,7 +360,7 @@ export default function FilterPanel(props: Props) {
               step={100}
             />
           </div>
-          <p className="text-[10px] text-text-dim">
+          <p className="text-[11px] text-text-dim">
             Диапазон: {absMin.toFixed(0)} – {absMax.toFixed(0)} га
           </p>
         </Section>
@@ -376,7 +376,7 @@ export default function FilterPanel(props: Props) {
             placeholder="Все лесничества"
           />
           {config && config.frnames.length <= 1 && (
-            <p className="text-[10px] text-text-dim mt-1.5">
+            <p className="text-[11px] text-text-dim mt-1.5">
               В текущих данных одно лесничество — фильтр не меняет выборку.
             </p>
           )}
@@ -386,7 +386,7 @@ export default function FilterPanel(props: Props) {
       </div>
 
       {/* Footer hint */}
-      <div className="shrink-0 px-4 py-2.5 border-t border-border bg-surface-2/40 text-[10px] text-text-dim">
+      <div className="shrink-0 px-4 py-2.5 border-t border-border bg-surface-2/40 text-[11px] text-text-dim">
         Кликните на полигон на карте — графики обновятся.
       </div>
     </aside>

@@ -148,7 +148,7 @@ export default function Dashboard() {
   // Server + first client render: identical loader → no hydration mismatch.
   if (!mounted) {
     return (
-      <div className="flex flex-col min-h-screen items-center justify-center gap-3 text-text-dim text-sm">
+      <div className="flex flex-col min-h-screen items-center justify-center gap-3 text-text-dim text-[15px]">
         <span className="w-6 h-6 rounded-full border-2 border-accent/30 border-t-accent animate-spin" />
         Загрузка дашборда…
       </div>
@@ -164,9 +164,10 @@ export default function Dashboard() {
         yearRange={config ? `${config.years.min}–${config.years.max}` : undefined}
       />
 
-      {/* min-h forces a usable layout height; on tall screens flex-1 fills the
-          viewport, on short screens the page scrolls so the bottom stays reachable. */}
-      <div className="flex flex-1 min-h-[1240px]">
+      {/* Row grows to its content (the main column), so the sidebar stretches to
+          the full height beside it — no empty gap. min-h keeps it filling the
+          viewport on short content; the page scrolls when content is taller. */}
+      <div className="flex items-stretch min-h-[calc(100vh-3.5rem)]">
       {/* Sidebar */}
       <FilterPanel
         config={config}
@@ -223,7 +224,7 @@ export default function Dashboard() {
               overlayIndex={index}
               overlayFireYear={fireYear}
             />
-            <div className="absolute bottom-3 left-3 flex items-center gap-2 bg-surface/85 backdrop-blur rounded-lg px-3 py-1.5 text-xs text-text-muted pointer-events-none select-none border border-border shadow-md max-w-[min(90%,420px)] z-[400]">
+            <div className="absolute bottom-3 left-3 flex items-center gap-2 bg-surface/85 backdrop-blur rounded-lg px-3 py-1.5 text-[13px] text-text-muted pointer-events-none select-none border border-border shadow-md max-w-[min(90%,420px)] z-[400]">
               <span className="w-1.5 h-1.5 rounded-full bg-warning shrink-0 pulse-glow" />
               {selectedFireIds.size === 0
                 ? "Кликните на гарь — все графики пересчитаются под неё"
@@ -247,8 +248,8 @@ export default function Dashboard() {
         {singleFireId && (
           <div className="panel shrink-0 h-[470px] flex flex-col relative z-10 rise-in">
             <div className="shrink-0 flex items-center justify-between px-5 pt-3.5 pb-2.5 border-b border-border">
-              <span className="text-sm font-semibold text-text panel-title">Снимки гари в вегетационных индексах</span>
-              <span className="text-[10px] text-text-muted tabular-nums">
+              <span className="text-[15px] font-semibold text-text panel-title">Снимки гари в вегетационных индексах</span>
+              <span className="text-[11px] text-text-muted tabular-nums">
                 пожар #{singleFireId} · год пожара {fireYear}
               </span>
             </div>

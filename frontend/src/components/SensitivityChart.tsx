@@ -47,21 +47,21 @@ export default function SensitivityChart({ data, index, loading, scope, scopeAct
       <div className="flex items-start justify-between mb-4 shrink-0">
         <div className="space-y-1.5 min-w-0">
           <div className="flex items-center gap-1.5">
-            <p className="text-sm font-semibold text-text panel-title" style={{ ["--tab" as string]: "var(--warning)" }}>Чувствительность {index}</p>
+            <p className="text-[15px] font-semibold text-text panel-title" style={{ ["--tab" as string]: "var(--warning)" }}>Чувствительность {index}</p>
             <InfoTip text={goodWhenPositive
               ? `На сколько процентов ${index} в каждом году отклоняется от среднего за годы до пожара. Отрицательные (красные) — растительность пострадала, положительные (зелёные) — превышает допожарный уровень.`
               : `На сколько процентов ${index} отклоняется от среднего за годы до пожара. ${index} — индекс повреждения: положительные (красные) — сильнее выгорело, отрицательные (зелёные) — ближе к допожарному состоянию.`} />
           </div>
           <div className="flex items-center gap-1.5 flex-wrap">
             {scope && <ScopeChip label={scope} active={scopeActive} />}
-            <span className="text-[11px] text-text-muted">% от допожарного среднего</span>
+            <span className="text-[12px] text-text-muted">% от допожарного среднего</span>
           </div>
         </div>
         {chartData.length > 0 && (
           <div className="flex items-center gap-3 shrink-0">
             <div className="text-right">
-              <p className="text-[10px] text-text-dim">min / max</p>
-              <p className="text-xs font-semibold tabular-nums">
+              <p className="text-[11px] text-text-dim">min / max</p>
+              <p className="text-[13px] font-semibold tabular-nums">
                 <span className={devClass(minDev)}>
                   {minDev > 0 ? "+" : ""}{minDev.toFixed(1)}%
                 </span>
@@ -78,11 +78,11 @@ export default function SensitivityChart({ data, index, loading, scope, scopeAct
       {/* Chart */}
       <div className="flex-1 min-h-0">
         {loading ? (
-          <div className="h-full flex items-center justify-center text-text-dim text-xs">
+          <div className="h-full flex items-center justify-center text-text-dim text-[13px]">
             Загрузка...
           </div>
         ) : chartData.length === 0 ? (
-          <div className="h-full flex items-center justify-center text-text-dim text-xs">
+          <div className="h-full flex items-center justify-center text-text-dim text-[13px]">
             Нет данных
           </div>
         ) : (
@@ -104,12 +104,12 @@ export default function SensitivityChart({ data, index, loading, scope, scopeAct
               )}
               <XAxis
                 dataKey="ysf"
-                tick={{ fill: "var(--text-dim)", fontSize: 10 }}
+                tick={{ fill: "var(--text-dim)", fontSize: 11 }}
                 tickLine={false}
                 axisLine={{ stroke: "var(--border)" }}
               />
               <YAxis
-                tick={{ fill: "var(--text-dim)", fontSize: 10 }}
+                tick={{ fill: "var(--text-dim)", fontSize: 11 }}
                 tickLine={false}
                 axisLine={false}
                 width={48}
@@ -121,7 +121,7 @@ export default function SensitivityChart({ data, index, loading, scope, scopeAct
                   background: "var(--surface-2)",
                   border: "1px solid var(--border-strong)",
                   borderRadius: 8,
-                  fontSize: 12,
+                  fontSize: 13,
                   boxShadow: "var(--shadow-lg)",
                 }}
                 labelStyle={{ color: "var(--text-muted)", marginBottom: 4 }}
@@ -137,7 +137,7 @@ export default function SensitivityChart({ data, index, loading, scope, scopeAct
                 stroke="var(--warning)"
                 strokeDasharray="4 3"
                 strokeWidth={1.5}
-                label={{ value: "пожар", fill: "var(--warning)", fontSize: 9, position: "top" }}
+                label={{ value: "пожар", fill: "var(--warning)", fontSize: 10, position: "top" }}
               />
               <Bar dataKey="dev" radius={[3, 3, 0, 0]} maxBarSize={16} isAnimationActive={false}>
                 {chartData.map((d, i) => (

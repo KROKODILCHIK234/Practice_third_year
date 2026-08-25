@@ -358,8 +358,8 @@ export default function FireMap({
       {overlayFireId && overlayEntries && overlayEntries.length > 0 && (
         <div className="absolute top-3 right-3 z-[500] w-56 bg-surface/90 backdrop-blur rounded-lg border border-border shadow-lg overflow-hidden">
           <div className="flex items-center justify-between px-3 py-2 border-b border-border bg-surface-2/50">
-            <span className="flex items-center gap-1.5 text-[11px] font-semibold text-text">
-              <span className="text-accent text-[12px] leading-none" aria-hidden>▦</span>
+            <span className="flex items-center gap-1.5 text-[12px] font-semibold text-text">
+              <span className="text-accent text-[13px] leading-none" aria-hidden>▦</span>
               VI-снимок на карте
             </span>
             <button
@@ -378,7 +378,7 @@ export default function FireMap({
           </div>
 
           <div className={`px-3 py-2.5 space-y-2.5 transition-opacity ${overlayOn ? "" : "opacity-40 pointer-events-none"}`}>
-            <div className="flex items-center justify-between text-[10px] text-text-muted">
+            <div className="flex items-center justify-between text-[11px] text-text-muted">
               <span>Индекс</span>
               <span className="px-1.5 py-0.5 rounded bg-accent-soft text-accent font-semibold tabular-nums">
                 {overlayIndex}
@@ -386,13 +386,13 @@ export default function FireMap({
             </div>
 
             <div>
-              <p className="text-[10px] text-text-muted mb-1">Год снимка</p>
+              <p className="text-[11px] text-text-muted mb-1">Год снимка</p>
               <div className="flex flex-wrap gap-1">
                 {sortedYears.map((y) => (
                   <button
                     key={y}
                     onClick={() => setOverlayYear(y)}
-                    className={`px-1.5 py-0.5 text-[10px] rounded tabular-nums border transition-colors ${
+                    className={`px-1.5 py-0.5 text-[11px] rounded tabular-nums border transition-colors ${
                       overlayYear === y
                         ? "bg-accent-soft border-accent/40 text-accent font-semibold"
                         : "border-border text-text-muted hover:text-text hover:border-border-strong"
@@ -407,7 +407,7 @@ export default function FireMap({
             </div>
 
             <div>
-              <div className="flex items-center justify-between text-[10px] text-text-muted mb-1">
+              <div className="flex items-center justify-between text-[11px] text-text-muted mb-1">
                 <span>Прозрачность снимка</span>
                 <span className="tabular-nums">{Math.round(overlayOpacity * 100)}%</span>
               </div>

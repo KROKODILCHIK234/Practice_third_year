@@ -7,7 +7,7 @@ export function InfoTip({ text }: { text: string }) {
       title={text}
       role="img"
       aria-label={text}
-      className="inline-flex items-center justify-center w-3.5 h-3.5 shrink-0 rounded-full border border-border text-text-dim text-[8px] font-semibold leading-none cursor-help select-none transition-colors hover:text-text hover:border-border-strong"
+      className="inline-flex items-center justify-center w-3.5 h-3.5 shrink-0 rounded-full border border-border text-text-dim text-[9px] font-semibold leading-none cursor-help select-none transition-colors hover:text-text hover:border-border-strong"
     >
       i
     </span>
@@ -18,7 +18,7 @@ export function InfoTip({ text }: { text: string }) {
 export function ScopeChip({ label, active }: { label: string; active?: boolean }) {
   return (
     <span
-      className={`inline-flex items-center gap-1 text-[10px] rounded-full px-2 py-0.5 border tabular-nums whitespace-nowrap ${
+      className={`inline-flex items-center gap-1 text-[11px] rounded-full px-2 py-0.5 border tabular-nums whitespace-nowrap ${
         active
           ? "border-accent/40 bg-accent-soft text-accent"
           : "border-border bg-surface-2 text-text-muted"

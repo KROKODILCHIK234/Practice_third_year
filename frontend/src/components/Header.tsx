@@ -18,15 +18,14 @@ export default function Header({ totalFires, selectedCount, apiOk, yearRange }: 
     <header className="shrink-0 h-14 px-5 flex items-center gap-4 bg-gradient-to-b from-surface/85 to-surface/60 backdrop-blur-xl border-b border-border shadow-sm relative z-20">
       {/* Brand */}
       <div className="flex items-center gap-2.5">
-        <div className="relative w-7 h-7 rounded-lg bg-gradient-to-br from-accent/30 to-warning/20 border border-accent/30 flex items-center justify-center">
-          <span className="text-[15px] leading-none">🔥</span>
-          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-accent pulse-glow" />
+        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-accent/30 to-warning/20 border border-accent/30 flex items-center justify-center">
+          <span className="text-[16px] leading-none">🔥</span>
         </div>
         <div className="leading-tight">
-          <p className="text-[13px] font-semibold text-text tracking-tight">
+          <p className="text-[14px] font-semibold text-text tracking-tight">
             Дашборд анализа гарей
           </p>
-          <p className="text-[10px] text-text-muted">
+          <p className="text-[11px] text-text-muted">
             Иркутская область · MODIS · Landsat · Sentinel-2
           </p>
         </div>
@@ -36,7 +35,7 @@ export default function Header({ totalFires, selectedCount, apiOk, yearRange }: 
       <div className="h-7 w-px bg-border" />
 
       {/* Data scope */}
-      <div className="flex items-center gap-5 text-[11px] text-text-muted">
+      <div className="flex items-center gap-5 text-[12px] text-text-muted">
         <div className="flex items-center gap-1.5">
           <span className="text-text-dim">Период данных:</span>
           <span className="text-text font-medium tabular-nums">{yearRange ?? "—"}</span>
@@ -54,7 +53,7 @@ export default function Header({ totalFires, selectedCount, apiOk, yearRange }: 
       </div>
 
       {/* Right side: API status */}
-      <div className="ml-auto flex items-center gap-3 text-[11px]">
+      <div className="ml-auto flex items-center gap-3 text-[12px]">
         <div className="flex items-center gap-1.5">
           <span
             className={`w-1.5 h-1.5 rounded-full ${

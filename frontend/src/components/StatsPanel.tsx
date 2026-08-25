@@ -25,16 +25,16 @@ function Metric({
 }) {
   return (
     <div className={`flex flex-col justify-center min-w-0 ${align === "right" ? "items-end text-right" : ""}`}>
-      <p className="text-[9.5px] text-text-dim uppercase tracking-wider whitespace-nowrap leading-none mb-1.5">
+      <p className="text-[11px] text-text-dim uppercase tracking-wider whitespace-nowrap leading-none mb-1.5">
         {label}
       </p>
       <p
-        className="text-[17px] font-semibold leading-none tabular-nums truncate"
+        className="text-[18px] font-semibold leading-none tabular-nums truncate"
         style={color ? { color } : undefined}
       >
         {value}
       </p>
-      {sub && <p className="text-[10px] text-text-dim mt-1.5 leading-none truncate">{sub}</p>}
+      {sub && <p className="text-[11px] text-text-dim mt-1.5 leading-none truncate">{sub}</p>}
     </div>
   );
 }
@@ -84,7 +84,7 @@ export default function StatsPanel({ fires, selectedFireIds, viData, index }: Pr
     <div className="flex items-stretch gap-3 h-[88px]">
       {/* Group: fires */}
       <div className="metric-group flex-1 flex items-center gap-4 pl-4 pr-4" style={{ ["--rail" as string]: "var(--warning)" }}>
-        <span className="text-[15px] leading-none select-none" aria-hidden>🔥</span>
+        <span className="text-[16px] leading-none select-none" aria-hidden>🔥</span>
         <Metric
           label="Пожаров"
           value={String(active.length)}
@@ -107,13 +107,13 @@ export default function StatsPanel({ fires, selectedFireIds, viData, index }: Pr
       {/* Group: VI before → after */}
       <div className="metric-group flex-1 flex items-center gap-3.5 pl-4 pr-4" style={{ ["--rail" as string]: idxColor }}>
         <span
-          className="text-[10px] font-bold px-1.5 py-1 rounded-md tabular-nums leading-none"
+          className="text-[11px] font-bold px-1.5 py-1 rounded-md tabular-nums leading-none"
           style={{ color: idxColor, background: "color-mix(in srgb, currentColor 14%, transparent)" }}
         >
           {index}
         </span>
         <Metric label="До пожара" value={preAvg !== null ? preAvg.toFixed(3) : "—"} sub="доп. среднее" />
-        <span className="text-text-dim text-sm leading-none" aria-hidden>→</span>
+        <span className="text-text-dim text-[15px] leading-none" aria-hidden>→</span>
         <Metric
           label="После пожара"
           value={postAvg !== null ? postAvg.toFixed(3) : "—"}
@@ -133,7 +133,7 @@ export default function StatsPanel({ fires, selectedFireIds, viData, index }: Pr
           value={
             fireDevPct === null ? "—" : (
               <span className="inline-flex items-center gap-1">
-                <span className="text-[11px]">{fireDevPct < 0 ? "▼" : "▲"}</span>
+                <span className="text-[12px]">{fireDevPct < 0 ? "▼" : "▲"}</span>
                 {signed(fireDevPct)}
               </span>
             )

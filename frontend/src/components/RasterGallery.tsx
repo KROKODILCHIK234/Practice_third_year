@@ -60,7 +60,7 @@ export default function RasterGallery({ fireId, band, fireYear = 2005 }: Props) 
     return (
       <div className="h-full flex flex-col items-center justify-center text-center px-6 gap-2.5">
         <div className="w-12 h-12 rounded-2xl bg-accent-soft border border-accent/20 flex items-center justify-center text-accent text-xl">▦</div>
-        <p className="text-sm text-text-muted max-w-xs">
+        <p className="text-[15px] text-text-muted max-w-xs">
           Выберите один пожар на карте, чтобы посмотреть снимки в цветах вегетационных индексов
         </p>
       </div>
@@ -79,7 +79,7 @@ export default function RasterGallery({ fireId, band, fireYear = 2005 }: Props) 
 
   if (entries.length === 0) {
     return (
-      <div className="h-full flex items-center justify-center text-xs text-text-dim text-center px-6">
+      <div className="h-full flex items-center justify-center text-[13px] text-text-dim text-center px-6">
         Нет растров для этого пожара. Распакуйте архив со снимками в папку
         <code className="mx-1 text-text-muted">Data/fire_rasters/</code> и перезапустите бэкенд.
       </div>
@@ -96,12 +96,12 @@ export default function RasterGallery({ fireId, band, fireYear = 2005 }: Props) 
       {/* Header */}
       <div className="shrink-0 flex flex-wrap items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-2.5">
-          <span className="text-base font-bold px-2 py-1 rounded-md tabular-nums" style={{ color: meta.color, background: `color-mix(in srgb, ${meta.color} 14%, transparent)` }}>
+          <span className="text-[17px] font-bold px-2 py-1 rounded-md tabular-nums" style={{ color: meta.color, background: `color-mix(in srgb, ${meta.color} 14%, transparent)` }}>
             {band}
           </span>
           <div>
-            <p className="text-sm font-semibold text-text">Снимки гари · {meta.desc}</p>
-            <p className="text-[11px] text-text-dim">
+            <p className="text-[15px] font-semibold text-text">Снимки гари · {meta.desc}</p>
+            <p className="text-[12px] text-text-dim">
               Пожар #{fireId} · {sortedYears.length} {plural(sortedYears.length, "снимок", "снимка", "снимков")} по годам
             </p>
           </div>
@@ -111,20 +111,20 @@ export default function RasterGallery({ fireId, band, fireYear = 2005 }: Props) 
             <a
               href={api.rasterGifUrl(fireId, band)}
               download={`fire${fireId}_${band}.gif`}
-              className="lift sheen-hover flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold border focus-ring"
+              className="lift sheen-hover flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] font-semibold border focus-ring"
               style={{ color: meta.color, borderColor: `color-mix(in srgb, ${meta.color} 50%, transparent)`, background: `color-mix(in srgb, ${meta.color} 13%, transparent)` }}
               title="Скачать анимацию изменения по годам (GIF)"
             >
               <span aria-hidden>⬇</span> Скачать GIF
             </a>
           )}
-          <span className="text-[11px] text-text-dim">клик по снимку — увеличить</span>
+          <span className="text-[12px] text-text-dim">клик по снимку — увеличить</span>
         </div>
       </div>
 
       {/* Colourbar with index-specific meaning of low / high */}
       <div className="shrink-0 mb-4 max-w-2xl">
-        <div className="flex items-center justify-between text-[10px] text-text-dim mb-1">
+        <div className="flex items-center justify-between text-[11px] text-text-dim mb-1">
           <span>{meta.lowLabel}</span>
           <span className="tabular-nums">{meta.range}</span>
           <span>{meta.highLabel}</span>
@@ -153,14 +153,14 @@ export default function RasterGallery({ fireId, band, fireYear = 2005 }: Props) 
                   />
                 </div>
                 {isFireYear && (
-                  <div className="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-warning/90 text-[9px] font-bold text-white tracking-wider shadow-sm">
+                  <div className="absolute top-2 right-2 px-2 py-0.5 rounded-md bg-warning/90 text-[10px] font-bold text-white tracking-wider shadow-sm">
                     ПОЖАР
                   </div>
                 )}
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent px-3 pt-5 pb-2">
                   <div className="flex items-baseline justify-between gap-1.5">
-                    <span className="text-base font-bold text-white tabular-nums">{year}</span>
-                    <span className="text-[10px] text-white/65 truncate">{sensorLabel(sensorByYear.get(year))}</span>
+                    <span className="text-[17px] font-bold text-white tabular-nums">{year}</span>
+                    <span className="text-[11px] text-white/65 truncate">{sensorLabel(sensorByYear.get(year))}</span>
                   </div>
                 </div>
               </button>
@@ -175,12 +175,12 @@ export default function RasterGallery({ fireId, band, fireYear = 2005 }: Props) 
           <div className="bg-surface border border-border-strong rounded-2xl shadow-lg w-[94vw] max-w-[1500px] max-h-[95vh] flex flex-col overflow-hidden" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
               <div className="flex items-center gap-3">
-                <span className="text-sm font-bold px-2 py-1 rounded-md tabular-nums" style={{ color: meta.color, background: `color-mix(in srgb, ${meta.color} 14%, transparent)` }}>
+                <span className="text-[15px] font-bold px-2 py-1 rounded-md tabular-nums" style={{ color: meta.color, background: `color-mix(in srgb, ${meta.color} 14%, transparent)` }}>
                   {band}
                 </span>
                 <div>
-                  <p className="text-base font-semibold text-text leading-tight">{zoomYear} год</p>
-                  <p className="text-xs text-text-dim">
+                  <p className="text-[17px] font-semibold text-text leading-tight">{zoomYear} год</p>
+                  <p className="text-[13px] text-text-dim">
                     {meta.desc} · пожар #{fireId}
                     {sensorByYear.get(zoomYear) && <span> · {sensorLabel(sensorByYear.get(zoomYear))}</span>}
                     {zoomYear === fireYear && <span className="ml-1.5 text-warning">· год пожара</span>}
@@ -192,7 +192,7 @@ export default function RasterGallery({ fireId, band, fireYear = 2005 }: Props) 
             <div className="flex-1 min-h-0 overflow-auto p-5 flex flex-col items-center gap-4 bg-bg">
               <img src={api.rasterUrl(fireId, zoomYear, band)} alt={`${band} ${zoomYear}`} className="w-full flex-1 min-h-0 object-contain rounded-lg ring-1 ring-border [image-rendering:pixelated]" />
               <div className="w-full max-w-xl">
-                <div className="flex justify-between text-[10px] text-text-dim mb-1">
+                <div className="flex justify-between text-[11px] text-text-dim mb-1">
                   <span>{meta.lowLabel}</span>
                   <span className="tabular-nums">{meta.range}</span>
                   <span>{meta.highLabel}</span>
