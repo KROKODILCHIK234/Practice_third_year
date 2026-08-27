@@ -28,3 +28,10 @@ __pycache__/
 # for how to obtain and place them (data link in the app header).
 Data/fire_rasters/
 Data/**/*.zip
+
+# ── Editor/tooling local config ────────────────
+.claude/
+CLAUDE.md
+AGENTS.md
+**/CLAUDE.md
+**/AGENTS.md
