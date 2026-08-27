@@ -83,6 +83,9 @@ export default function NdviAreasChart({ fireYear }: Props) {
                   contentStyle={{ background: "var(--surface-2)", border: "1px solid var(--border-strong)", borderRadius: 8, fontSize: 11, boxShadow: "var(--shadow-lg)" }}
                   labelStyle={{ color: "var(--text-muted)", marginBottom: 4 }}
                   itemStyle={{ padding: 0 }}
+                  // Data columns arrive in string order (0,10,11,12,1,2…); sort the
+                  // tooltip rows by the numeric class so they read 0,1,2,…,12.
+                  itemSorter={(item) => classNum(String(item.dataKey))}
                   formatter={(v, name) => [`${Math.round(Number(v)).toLocaleString("ru-RU")} га`, `Класс ${classNum(String(name))}`]}
                   labelFormatter={(l) => `${l} год`}
                 />
